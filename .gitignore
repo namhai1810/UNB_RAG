@@ -5,3 +5,5 @@ data/processed/
 evaluation/results.csv
 .pytest_cache/
 logs/
+*.json
+*.orig
