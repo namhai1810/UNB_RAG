@@ -1,0 +1,26 @@
+# Core
+pydantic>=2.9
+pydantic-settings>=2.5
+python-dotenv>=1.0
+rich>=13.7
+
+# Orchestration
+langgraph>=1.0
+langchain-core>=0.3
+
+# LLM backends (both installed; pick one via LLM_PROVIDER)
+anthropic>=1.0          # Claude API
+openai>=1.50            # any OpenAI-compatible endpoint (vLLM, TGI, Ollama, ...)
+
+# Retrieval
+qdrant-client>=1.12     # local mode: hybrid dense+sparse, RRF fusion
+sentence-transformers>=3.0
+fastembed>=0.4          # Qdrant/bm25 sparse vectors
+torch>=2.4
+
+# Ingestion
+pymupdf>=1.24
+transformers>=4.44      # tokenizer used for chunk budgeting
+
+# Evaluation
+pandas>=2.2

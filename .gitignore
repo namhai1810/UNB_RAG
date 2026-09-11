@@ -1,0 +1,6 @@
+__pycache__/
+*.py[cod]
+.env
+data/processed/
+evaluation/results.csv
+.pytest_cache/

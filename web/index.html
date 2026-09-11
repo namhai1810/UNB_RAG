@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Grounded answers from NIST and CISA cyber-security guidance." />
+    <title>Sentinel / Cyber Guidance</title>
+    <link rel="stylesheet" href="/assets/styles.css" />
+  </head>
+  <body>
+    <div class="noise" aria-hidden="true"></div>
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Sentinel home"><span class="brand-mark"><i></i><i></i><i></i></span><span>SENTINEL</span></a>
+      <div class="system-state" id="systemState"><span class="status-dot"></span><span id="systemText">Checking corpus…</span></div>
+    </header>
+    <main>
+      <section class="hero">
+        <div class="eyebrow"><span>01</span> GROUNDED CYBER INTELLIGENCE</div>
+        <h1>Ask the guidance.<br /><em>Trace the answer.</em></h1>
+        <p class="intro">A four-agent research system grounded in NIST and CISA publications. Every claim stays connected to its source.</p>
+      </section>
+      <section class="query-panel" aria-labelledby="askHeading">
+        <div class="panel-topline"><h2 id="askHeading">Your question</h2><span>DEFENSIVE SECURITY ONLY</span></div>
+        <form id="askForm">
+          <label class="sr-only" for="queryInput">Cyber-security question</label>
+          <textarea id="queryInput" rows="3" maxlength="4000" placeholder="What should an organisation do during incident containment?" required></textarea>
+          <div class="composer-footer">
+            <div class="examples" aria-label="Example questions">
+              <button type="button" data-query="What should an organisation do during incident containment?">Incident containment</button>
+              <button type="button" data-query="How does the NIST Cybersecurity Framework address ransomware recovery?">Ransomware recovery</button>
+              <button type="button" data-query="What are the key steps for preserving evidence during incident response?">Preserve evidence</button>
+            </div>
+            <button class="submit" id="submitButton" type="submit"><span>Run analysis</span><b aria-hidden="true">↗</b></button>
+          </div>
+        </form>
+      </section>
+      <section class="process" aria-label="Agent workflow">
+        <article data-agent="triage"><span>01</span><div><b>TRIAGE</b><small>Scope &amp; plan</small></div></article><i></i>
+        <article data-agent="retrieve"><span>02</span><div><b>RETRIEVE</b><small>Hybrid search</small></div></article><i></i>
+        <article data-agent="verify"><span>03</span><div><b>VERIFY</b><small>Evidence check</small></div></article><i></i>
+        <article data-agent="answer"><span>04</span><div><b>ANSWER</b><small>Cited response</small></div></article>
+      </section>
+      <section class="loading" id="loading" hidden aria-live="polite"><div class="scanner"><span></span></div><p id="loadingText">Agent 1 is checking scope…</p><small>The first run can take a moment while models load.</small></section>
+      <section class="result" id="result" hidden aria-live="polite">
+        <div class="result-heading"><div><span class="result-kicker">VERIFIED RESPONSE</span><h2>Analysis</h2></div><div class="result-meta"><span class="status-pill" id="statusPill">ANSWERED</span><span id="confidence"></span></div></div>
+        <div class="answer-copy" id="answerCopy"></div><div class="caveat" id="caveat" hidden></div>
+        <div class="evidence-section" id="evidenceSection" hidden><div class="section-title"><h3>Source evidence</h3><span id="citationCount"></span></div><div class="citations" id="citations"></div></div>
+        <details class="trace" id="tracePanel"><summary><span>Agent decision trace</span><small id="traceSummary"></small></summary><div id="traceList"></div></details>
+      </section>
+      <section class="error-panel" id="errorPanel" hidden aria-live="assertive"><span>REQUEST FAILED</span><p id="errorText"></p><button type="button" id="dismissError">Dismiss</button></section>
+    </main>
+    <footer><span>LOCAL RAG DEMO</span><p>NIST CSF 2.0 · NIST SP 800-61r3 · CISA #StopRansomware</p><span>NO UNGROUNDED CLAIMS</span></footer>
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>
