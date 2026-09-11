@@ -15,6 +15,7 @@ from typing import Any
 from urllib.parse import urlparse
 
 from src.config import ROOT, settings
+from src.logging_utils import rotating_file_handler
 
 
 WEB_DIR = ROOT / "web"
@@ -154,10 +155,18 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--port", default=7860, type=int)
     parser.add_argument("-v", "--verbose", action="store_true")
     args = parser.parse_args(argv)
-    logging.basicConfig(level=logging.INFO if args.verbose else logging.WARNING, format="%(levelname)s: %(message)s")
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.INFO if args.verbose else logging.WARNING)
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(levelname)s: %(message)s",
+        handlers=[console_handler, rotating_file_handler()],
+        force=True,
+    )
 
     server = HTTPServer((args.host, args.port), DemoHandler)
     print(f"Cyber RAG demo is running at http://{args.host}:{args.port}")
+    print(f"Logs are written to {settings.resolved_log_file}")
     try:
         server.serve_forever()
     except KeyboardInterrupt:

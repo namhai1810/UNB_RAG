@@ -15,6 +15,7 @@ from pydantic import Field
 
 from src.agents import DOMAIN, AgentOutput
 from src.llm import get_llm
+from src.logging_utils import log_event, payload
 
 log = logging.getLogger(__name__)
 
@@ -82,5 +83,20 @@ def triage(query: str) -> TriageDecision:
         )
     decision.search_queries = [q.strip() for q in decision.search_queries if q.strip()][:3]
 
-    log.info("Triage: %s (%d queries)", decision.category, len(decision.search_queries))
+    log_event(
+        log,
+        "agent.triage.output",
+        category=decision.category,
+        reasoning=payload(decision.reasoning),
+        clarifying_question=payload(decision.clarifying_question),
+        rejection_reason=payload(decision.rejection_reason),
+    )
+    if decision.search_queries:
+        log_event(
+            log,
+            "query.rewrite",
+            stage="triage",
+            original=payload(query),
+            rewritten=payload(decision.search_queries),
+        )
     return decision

@@ -14,6 +14,7 @@ from __future__ import annotations
 import logging
 
 from src.config import settings
+from src.logging_utils import log_event, payload
 from src.retrieval import Evidence, HybridRetriever, get_retriever
 
 log = logging.getLogger(__name__)
@@ -60,20 +61,51 @@ def retrieve(
     top_k = top_k or settings.top_k_rerank
     exclude = exclude_chunk_ids or set()
 
+    log_event(
+        log,
+        "retrieval.start",
+        round=round_no,
+        queries=payload(queries),
+        excluded_chunk_ids=sorted(exclude),
+        top_k=top_k,
+    )
     ranked_lists: list[list[Evidence]] = []
     for query in queries:
         result = retriever.retrieve(query, top_k=settings.top_k_fused, round_no=round_no)
         filtered = [e for e in result.evidence if e.chunk_id not in exclude]
+        log_event(
+            log,
+            "retrieval.query.output",
+            round=round_no,
+            query=payload(query),
+            candidates=result.n_candidates,
+            returned=len(result.evidence),
+            after_exclusion=len(filtered),
+            chunk_ids=[e.chunk_id for e in filtered],
+        )
         if filtered:
             ranked_lists.append(filtered)
 
     if not ranked_lists:
-        log.warning("Round %d: no evidence for queries %s", round_no, queries)
+        log.warning(
+            "retrieval.empty | round=%d queries=%s", round_no, payload(queries)
+        )
         return []
 
     fused = _fuse(ranked_lists, top_k)
-    log.info(
-        "Round %d: %d queries -> %d unique chunks -> top %d",
-        round_no, len(queries), len({e.chunk_id for lst in ranked_lists for e in lst}), len(fused),
+    log_event(
+        log,
+        "retrieval.end",
+        round=round_no,
+        query_count=len(queries),
+        unique_chunks=len({e.chunk_id for items in ranked_lists for e in items}),
+        evidence=[
+            {
+                "chunk_id": item.chunk_id,
+                "source": item.source,
+                "rerank_score": round(item.rerank_score, 4),
+            }
+            for item in fused
+        ],
     )
     return fused

@@ -41,10 +41,13 @@ class Settings(BaseSettings):
     llm_timeout: float = 300.0
 
     # --------------------------------------------------------------- logging
-    # Prompt/output logging is only visible when INFO logging is enabled (-v).
+    # Prompt/output is written at INFO; -v also displays it in the terminal.
     # Disable payloads in environments where user questions may be sensitive.
     log_payloads: bool = True
     log_max_chars: int = Field(default=4_000, ge=200)
+    log_file: Path = ROOT / "logs" / "cyber-rag.log"
+    log_max_bytes: int = Field(default=10 * 1024 * 1024, ge=1024)
+    log_backup_count: int = Field(default=5, ge=0)
 
     # ------------------------------------------------------------ embedding
     embedding_model: str = "BAAI/bge-m3"
@@ -70,6 +73,11 @@ class Settings(BaseSettings):
     # ---------------------------------------------------------- agent loops
     max_retrieval_rounds: int = 3           # verifier -> rewrite -> retrieve budget
     min_supporting_chunks: int = 2          # below this the evidence is "insufficient"
+
+    @property
+    def resolved_log_file(self) -> Path:
+        """Resolve relative LOG_FILE paths from the project root."""
+        return self.log_file if self.log_file.is_absolute() else ROOT / self.log_file
 
     @property
     def is_anthropic(self) -> bool:

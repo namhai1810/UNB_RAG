@@ -19,16 +19,24 @@ from rich.panel import Panel
 from rich.table import Table
 
 from src.config import settings
+from src.logging_utils import rotating_file_handler
 
 console = Console()
 
 
 def setup_logging(verbose: bool) -> None:
+    console_handler = RichHandler(
+        console=console,
+        rich_tracebacks=True,
+        show_path=False,
+    )
+    console_handler.setLevel(logging.INFO if verbose else logging.WARNING)
     logging.basicConfig(
-        level=logging.INFO if verbose else logging.WARNING,
+        level=logging.INFO,
         format="%(message)s",
         datefmt="[%X]",
-        handlers=[RichHandler(console=console, rich_tracebacks=True, show_path=False)],
+        handlers=[console_handler, rotating_file_handler()],
+        force=True,
     )
 
 

@@ -222,7 +222,7 @@ def route_verify(state: RAGState) -> str:
         target=target,
         reason=reason,
         round=state.get("round", 0),
-        rewritten_queries=verdict.rewritten_queries,
+        rewritten_queries=payload(verdict.rewritten_queries),
     )
     return target
 

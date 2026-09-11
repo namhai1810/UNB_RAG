@@ -4,3 +4,4 @@ __pycache__/
 data/processed/
 evaluation/results.csv
 .pytest_cache/
+logs/

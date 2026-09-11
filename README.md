@@ -150,8 +150,20 @@ classifier, and a refused triage call would otherwise stall the graph.
 python -m src.main ask "What should an organisation do during incident containment?"
 python -m src.main ask "..." --trace     # show each agent's decision
 python -m src.main chat                  # interactive
-python -m src.main -v ask "..."          # log agent activity
+python -m src.main -v ask "..."          # detailed pipeline + LLM logs
 ```
+
+Every request receives a correlation ID and logs pipeline start/end, state
+input/output for each graph node, routing decisions, retrieval candidates,
+question rewrites, LLM prompt/output, token usage, latency, and provider
+fallbacks. File logging is always INFO-level; `-v` also displays it in the
+terminal. Long values are truncated to `LOG_MAX_CHARS` (default `4000`). Set
+`LOG_PAYLOADS=false` when questions or model responses may contain sensitive
+data; metadata, timings, state transitions, and counts remain logged.
+
+Logs are also persisted to `logs/cyber-rag.log`, rotated at 10 MiB with five
+backups by default. Configure this with `LOG_FILE`, `LOG_MAX_BYTES`, and
+`LOG_BACKUP_COUNT`.
 
 Output is the answer, a citation table (`source / section / pages`), a confidence
 level, and any caveats.

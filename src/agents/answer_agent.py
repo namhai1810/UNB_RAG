@@ -15,6 +15,7 @@ from pydantic import Field
 
 from src.agents import DOMAIN, AgentOutput
 from src.llm import get_llm
+from src.logging_utils import log_event, payload
 from src.retrieval import Evidence, format_evidence
 
 log = logging.getLogger(__name__)
@@ -154,10 +155,20 @@ def generate(
         confidence = "low"
         caveats = (caveats + " The answer could not be tied to specific passages.").strip()
 
-    return AnswerPayload(
+    answer_payload = AnswerPayload(
         answer=result.answer.strip(),
         citations=_build_citations(evidence, markers),
         confidence=confidence,
         caveats=caveats,
         dropped_markers=dropped,
     )
+    log_event(
+        log,
+        "agent.answer.output",
+        answer=payload(answer_payload.answer),
+        confidence=answer_payload.confidence,
+        caveats=payload(answer_payload.caveats),
+        citation_markers=[citation.marker for citation in answer_payload.citations],
+        dropped_markers=answer_payload.dropped_markers,
+    )
+    return answer_payload

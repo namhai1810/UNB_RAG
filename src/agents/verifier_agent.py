@@ -15,6 +15,7 @@ from pydantic import Field
 from src.agents import DOMAIN, AgentOutput
 from src.config import settings
 from src.llm import get_llm
+from src.logging_utils import log_event, payload
 from src.retrieval import Evidence, format_evidence
 
 log = logging.getLogger(__name__)
@@ -94,8 +95,22 @@ def verify(
                 or "No passage was identified as actually supporting an answer."
             )
 
-    log.info(
-        "Verifier: sufficient=%s, %d supporting, %d rewrites",
-        verdict.sufficient, len(verdict.supporting_indices), len(verdict.rewritten_queries),
+    log_event(
+        log,
+        "agent.verifier.output",
+        sufficient=verdict.sufficient,
+        reasoning=payload(verdict.reasoning),
+        supporting_indices=verdict.supporting_indices,
+        missing_information=payload(verdict.missing_information),
     )
+    if verdict.rewritten_queries:
+        log_event(
+            log,
+            "query.rewrite",
+            stage="verifier",
+            original=payload(query),
+            tried_queries=payload(tried_queries or []),
+            missing_information=payload(verdict.missing_information),
+            rewritten=payload(verdict.rewritten_queries),
+        )
     return verdict

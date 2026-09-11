@@ -7,6 +7,7 @@ from functools import lru_cache
 from pydantic import BaseModel, Field
 
 from src.config import settings
+from src.logging_utils import payload
 
 log = logging.getLogger(__name__)
 
@@ -94,7 +95,10 @@ class HybridRetriever:
             for c in kept
         ]
         log.info(
-            "Retrieved %d candidates -> %d kept for %r", len(candidates), len(evidence), query
+            "Retrieved %d candidates -> %d kept for %s",
+            len(candidates),
+            len(evidence),
+            payload(query),
         )
         return RetrievalResult(query=query, evidence=evidence, n_candidates=len(candidates))
 

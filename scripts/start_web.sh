@@ -6,4 +6,4 @@ set -euo pipefail
 GPU_ID="${GPU_ID:-2}"
 export CUDA_VISIBLE_DEVICES="${GPU_ID}"
 
-exec python -m src.web --host 0.0.0.0 --port 7860
+exec python -m src.web --host 0.0.0.0 --port 7860 -v

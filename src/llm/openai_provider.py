@@ -43,7 +43,12 @@ def _usage(response) -> dict[str, int]:
     if usage is None:
         return {}
     keys = ("prompt_tokens", "completion_tokens", "total_tokens")
-    return {key: value for key in keys if (value := getattr(usage, key, None)) is not None}
+    return {
+        key: value
+        for key in keys
+        if (value := getattr(usage, key, None)) is not None
+    }
+
 
 # Failures that say nothing about whether a constraint style is supported.
 # Probing the next mode after one of these just multiplies the wait.
@@ -105,7 +110,11 @@ class OpenAIProvider(LLMProvider):
                 ],
             )
         except Exception:
-            log.exception("llm.error | provider=%s model=%s call_type=text", self.name, self.model)
+            log.exception(
+                "llm.error | provider=%s model=%s call_type=text",
+                self.name,
+                self.model,
+            )
             raise
 
         raw_text = response.choices[0].message.content or ""

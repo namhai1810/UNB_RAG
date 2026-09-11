@@ -10,6 +10,7 @@ import json
 import logging
 from contextvars import ContextVar, Token
 from functools import wraps
+from logging.handlers import RotatingFileHandler
 from time import perf_counter
 from typing import Any, Callable
 from uuid import uuid4
@@ -19,6 +20,25 @@ from pydantic import BaseModel
 from src.config import settings
 
 _request_id: ContextVar[str] = ContextVar("request_id", default="-")
+
+
+def rotating_file_handler() -> RotatingFileHandler:
+    """Create the application file handler and its parent directory."""
+    settings.resolved_log_file.parent.mkdir(parents=True, exist_ok=True)
+    handler = RotatingFileHandler(
+        settings.resolved_log_file,
+        maxBytes=settings.log_max_bytes,
+        backupCount=settings.log_backup_count,
+        encoding="utf-8",
+    )
+    handler.setLevel(logging.INFO)
+    handler.setFormatter(
+        logging.Formatter(
+            "%(asctime)s %(levelname)s %(name)s %(message)s",
+            datefmt="%Y-%m-%d %H:%M:%S",
+        )
+    )
+    return handler
 
 
 def new_request_id() -> str:
@@ -81,6 +101,16 @@ def log_event(logger: logging.Logger, event: str, **fields: Any) -> None:
 def state_summary(state: dict[str, Any]) -> dict[str, Any]:
     """Return a useful state snapshot without duplicating passage text."""
     summary: dict[str, Any] = {}
+    sensitive = {
+        "query",
+        "search_queries",
+        "tried_queries",
+        "triage",
+        "verdict",
+        "answer",
+        "response",
+        "error",
+    }
     for key in (
         "query",
         "status",
@@ -96,7 +126,29 @@ def state_summary(state: dict[str, Any]) -> dict[str, Any]:
     ):
         value = state.get(key)
         if value not in (None, "", [], {}):
-            summary[key] = payload(value) if key in {"query", "answer", "response"} else value
+            summary[key] = payload(value) if key in sensitive else value
+
+    # Preserve control-flow metadata even when textual payloads are disabled.
+    if not settings.log_payloads:
+        triage = state.get("triage")
+        if triage is not None:
+            summary["triage"] = {
+                "category": triage.category,
+                "search_query_count": len(triage.search_queries),
+            }
+        verdict = state.get("verdict")
+        if verdict is not None:
+            summary["verdict"] = {
+                "sufficient": verdict.sufficient,
+                "supporting_indices": verdict.supporting_indices,
+                "rewrite_count": len(verdict.rewritten_queries),
+            }
+        answer = state.get("answer")
+        if answer is not None:
+            summary["answer"] = {
+                "confidence": answer.confidence,
+                "citation_count": len(answer.citations),
+            }
 
     if "evidence" in state:
         summary["evidence"] = []
@@ -116,6 +168,7 @@ def state_summary(state: dict[str, Any]) -> dict[str, Any]:
 
 def logged_node(logger: logging.Logger, name: str) -> Callable:
     """Decorate a graph node with state input/output and duration logging."""
+
     def decorate(func: Callable) -> Callable:
         @wraps(func)
         def wrapped(state: dict[str, Any]) -> dict:
@@ -134,5 +187,7 @@ def logged_node(logger: logging.Logger, name: str) -> Callable:
                 update=state_summary(update),
             )
             return update
+
         return wrapped
+
     return decorate
