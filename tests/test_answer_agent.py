@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from src.agents import answer_agent
 from src.agents.answer_agent import GeneratedAnswer, generate
+from src.retrieval import Evidence
 
 
 def test_citations_resolve_to_the_right_passages(fake_llm, evidence_factory, answer_ok):
@@ -75,3 +76,40 @@ def test_page_range_citation_format(fake_llm, evidence_factory, answer_ok):
     evidence[0].page_end = 12
     payload = generate("q", evidence)
     assert payload.citations[0].pages == "pp.11-12"
+
+
+def test_table_citation_preserves_structured_rows(fake_llm):
+    fake_llm.queue(
+        GeneratedAnswer(
+            answer="The Govern function establishes strategy [1].",
+            used_indices=[1],
+            confidence="high",
+            caveats="",
+        )
+    )
+    evidence = [
+        Evidence(
+            chunk_id="table-1",
+            source="NIST.CSWP.29.pdf",
+            section="CSF Core",
+            page_start=20,
+            page_end=20,
+            chunk_type="table",
+            table_caption="CSF 2.0 Functions",
+            table_headers=["Function", "Purpose"],
+            table_rows=[{"Function": "Govern", "Purpose": "Establish strategy"}],
+            table_row_start=1,
+            table_row_end=1,
+            text="Row: 1\nFunction: Govern\nPurpose: Establish strategy",
+        )
+    ]
+
+    citation = generate("q", evidence).citations[0]
+
+    assert citation.chunk_type == "table"
+    assert citation.table_caption == "CSF 2.0 Functions"
+    assert citation.table_headers == ["Function", "Purpose"]
+    assert citation.table_rows == [
+        {"Function": "Govern", "Purpose": "Establish strategy"}
+    ]
+    assert citation.table_row_start == citation.table_row_end == 1

@@ -69,6 +69,12 @@ class Citation(AgentOutput):
     pages: str
     chunk_id: str
     quote: str = Field(description="Opening of the cited passage, for spot-checking.")
+    chunk_type: Literal["paragraph", "table"] = "paragraph"
+    table_caption: str = ""
+    table_headers: list[str] = Field(default_factory=list)
+    table_rows: list[dict[str, str]] = Field(default_factory=list)
+    table_row_start: int = 0
+    table_row_end: int = 0
 
 
 class AnswerPayload(AgentOutput):
@@ -99,6 +105,12 @@ def _build_citations(evidence: list[Evidence], markers: list[int]) -> list[Citat
                 pages=pages,
                 chunk_id=item.chunk_id,
                 quote=quote + ("..." if len(quote) == 220 else ""),
+                chunk_type=item.chunk_type,
+                table_caption=item.table_caption,
+                table_headers=item.table_headers,
+                table_rows=item.table_rows,
+                table_row_start=item.table_row_start,
+                table_row_end=item.table_row_end,
             )
         )
     return citations
