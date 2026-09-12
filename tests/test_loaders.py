@@ -11,8 +11,12 @@ from src.ingestion import loaders
 from src.ingestion.loaders import (
     ContentBlock,
     StructuredTableBlock,
+    StructuredTableCell,
     _clean,
     _extract_blocks,
+    _headers_are_suspicious,
+    _normalize_split_tables,
+    _table_headers_and_rows,
     _unique_headers,
     load_pdf,
 )
@@ -144,3 +148,171 @@ def test_load_pdf_always_saves_docling_markdown(monkeypatch, tmp_path: Path):
     assert loaded.markdown_path == tmp_path / "markdown" / "source.md"
     assert loaded.markdown_path.read_text(encoding="utf-8").startswith("## Controls")
     assert loaded.n_tables == 1
+
+
+def _grid_cell(text: str, row: int, column: int, *, header: bool = False):
+    return SimpleNamespace(
+        text=text,
+        start_row_offset_idx=row,
+        end_row_offset_idx=row + 1,
+        start_col_offset_idx=column,
+        end_col_offset_idx=column + 1,
+        column_header=header,
+    )
+
+
+def _table_block_for_test(
+    *,
+    page: int,
+    headers: list[str],
+    rows: list[dict[str, str]],
+    cells: list[StructuredTableCell] | None = None,
+    caption: str = "",
+) -> StructuredTableBlock:
+    return StructuredTableBlock(
+        text="table",
+        page_start=page,
+        page_end=page,
+        section="Controls",
+        caption=caption,
+        table_headers=headers,
+        table_rows=rows,
+        table_cells=cells or [],
+    )
+
+
+def test_grid_header_detection_rejects_a_single_flagged_continuation_cell():
+    grid = [
+        [
+            _grid_cell("", 0, 0),
+            _grid_cell("", 0, 1),
+            _grid_cell("continued paragraph", 0, 2, header=True),
+        ],
+        [
+            _grid_cell("AC-2", 1, 0),
+            _grid_cell("Account Management", 1, 1),
+            _grid_cell("Manage accounts", 1, 2),
+        ],
+    ]
+    item = SimpleNamespace(
+        data=SimpleNamespace(grid=grid, num_cols=3),
+        export_to_dataframe=lambda document: pd.DataFrame(
+            columns=["Column 1", "Column 2", "continued paragraph"]
+        ),
+    )
+
+    # Exercise the normal DataFrame path: it must notice the weak semantic
+    # signal and fall back to the raw grid rather than losing row zero.
+    headers, rows = _table_headers_and_rows(item, document=None)
+
+    assert headers == ["Column 1", "Column 2", "Column 3"]
+    assert rows[0] == {
+        "Column 1": "",
+        "Column 2": "",
+        "Column 3": "continued paragraph",
+    }
+    assert rows[1]["Column 1"] == "AC-2"
+
+
+def test_suspicious_header_detection_is_conservative_for_short_labels():
+    paragraph = (
+        "This is continuation text from a long description that was split across "
+        "a page and should remain content instead of becoming a column heading."
+    )
+
+    assert _headers_are_suspicious(["Column 1", "Column 2", paragraph])
+    assert not _headers_are_suspicious(["ID", "Control name", "Description"])
+
+
+def test_normalization_merges_sparse_first_row_and_reuses_previous_headers():
+    previous = _table_block_for_test(
+        page=1,
+        headers=["ID", "Control", "Description"],
+        rows=[{"ID": "AC-1", "Control": "Policy", "Description": "First part."}],
+        caption="Control catalog",
+    )
+    current = _table_block_for_test(
+        page=2,
+        headers=["Column 1", "Column 2", "Column 3"],
+        rows=[
+            {"Column 1": "", "Column 2": "", "Column 3": "Second part."},
+            {
+                "Column 1": "AC-2",
+                "Column 2": "Accounts",
+                "Column 3": "Manage accounts.",
+            },
+        ],
+    )
+
+    normalized = _normalize_split_tables([previous, current])
+
+    assert normalized == [previous, current]
+    assert previous.table_rows[-1]["Description"] == "First part. Second part."
+    assert previous.page_end == 2
+    assert current.table_headers == ["ID", "Control", "Description"]
+    assert current.table_rows == [
+        {"ID": "AC-2", "Control": "Accounts", "Description": "Manage accounts."}
+    ]
+    assert current.caption == "Control catalog"
+
+
+def test_normalization_recovers_a_continuation_promoted_to_headers():
+    continuation = (
+        "continues with a paragraph-like explanation that belongs to the prior row "
+        "and was incorrectly promoted by Docling"
+    )
+    previous = _table_block_for_test(
+        page=4,
+        headers=["ID", "Control", "Description"],
+        rows=[{"ID": "IA-1", "Control": "Identify", "Description": "Start"}],
+    )
+    cells = [
+        StructuredTableCell(
+            text=continuation,
+            row_start=0,
+            row_end=1,
+            column_start=2,
+            column_end=3,
+            is_column_header=True,
+        )
+    ]
+    current_headers = ["Column 1", "Column 2", continuation]
+    current = _table_block_for_test(
+        page=5,
+        headers=current_headers,
+        rows=[
+            {
+                "Column 1": "IA-2",
+                "Column 2": "Authenticate",
+                continuation: "Verify identity",
+            }
+        ],
+        cells=cells,
+    )
+
+    normalized = _normalize_split_tables([previous, current])
+
+    assert len(normalized) == 2
+    assert previous.table_rows[-1]["Description"] == f"Start {continuation}"
+    assert current.table_headers == previous.table_headers
+    assert current.table_rows == [
+        {"ID": "IA-2", "Control": "Authenticate", "Description": "Verify identity"}
+    ]
+
+
+def test_normalization_does_not_join_unrelated_same_width_tables():
+    previous = _table_block_for_test(
+        page=7,
+        headers=["ID", "Control", "Description"],
+        rows=[{"ID": "AC-1", "Control": "Policy", "Description": "Text"}],
+    )
+    current = _table_block_for_test(
+        page=8,
+        headers=["Code", "Meaning", "Owner"],
+        rows=[{"Code": "X", "Meaning": "Example", "Owner": "Team"}],
+    )
+
+    _normalize_split_tables([previous, current])
+
+    assert current.table_headers == ["Code", "Meaning", "Owner"]
+    assert previous.table_rows[-1]["Description"] == "Text"

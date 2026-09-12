@@ -28,6 +28,9 @@ log = logging.getLogger(__name__)
 _WS_RE = re.compile(r"[ \t]+")
 _NL_RE = re.compile(r"\n{3,}")
 _NORM_RE = re.compile(r"[^a-z0-9]+")
+_GENERIC_HEADER_RE = re.compile(
+    r"^column\s+\d+(?:\s+\(\d+\))?$", re.IGNORECASE
+)
 _SKIP_LABELS = {DocItemLabel.PAGE_HEADER, DocItemLabel.PAGE_FOOTER}
 
 
@@ -196,18 +199,75 @@ def _cell_value(value) -> str:
     return _clean(str(value)) if value is not None else ""
 
 
+def _header_row_is_semantic(row, row_index: int, num_cols: int) -> bool:
+    """Require a header flag to cover the row, not merely one stray cell.
+
+    Docling occasionally flags only the non-empty cell of a continuation row as
+    ``column_header``. Requiring at least half of the columns (and at least two
+    for multi-column tables) prevents that cell from promoting the whole row to
+    DataFrame column names. A genuinely merged header spanning every column is
+    still accepted because its declared span covers the complete row.
+    """
+    covered_columns: set[int] = set()
+    for cell in row:
+        if not getattr(cell, "column_header", False):
+            continue
+        if getattr(cell, "start_row_offset_idx", row_index) != row_index:
+            continue
+        start = max(0, int(getattr(cell, "start_col_offset_idx", 0)))
+        end = min(num_cols, int(getattr(cell, "end_col_offset_idx", start + 1)))
+        covered_columns.update(range(start, max(start + 1, end)))
+
+    if num_cols <= 1:
+        return bool(covered_columns)
+    required = max(2, math.ceil(num_cols / 2))
+    return len(covered_columns) >= required
+
+
+def _headers_are_suspicious(headers: list[str]) -> bool:
+    """Identify likely data mistakenly promoted to column names.
+
+    Real column labels are normally short noun phrases. A mostly-placeholder
+    header row, or one containing a long sentence/paragraph, is much more likely
+    to be a sparse continuation row at a PDF page boundary. Thresholds are
+    deliberately conservative so legitimate descriptive labels remain intact.
+    """
+    if not headers:
+        return True
+
+    meaningful = [
+        header
+        for header in headers
+        if not _GENERIC_HEADER_RE.fullmatch(header.strip())
+    ]
+    if len(headers) > 1 and len(meaningful) <= 1:
+        return True
+
+    for header in meaningful:
+        word_count = len(header.split())
+        if len(header) >= 160 or (len(header) >= 80 and word_count >= 14):
+            return True
+    return False
+
+
+def _semantic_header_count(grid, num_cols: int) -> int:
+    """Return the number of consecutive, confidently classified header rows."""
+    count = 0
+    for row_index, row in enumerate(grid):
+        if not _header_row_is_semantic(row, row_index, num_cols):
+            break
+        count += 1
+    return count
+
+
 def _grid_headers_and_rows(item) -> tuple[list[str], list[dict[str, str]]]:
     """Fallback for a malformed table that cannot be exported as a DataFrame."""
     grid = item.data.grid
-    header_count = 0
-    for row_index, row in enumerate(grid):
-        if any(cell.column_header and cell.start_row_offset_idx == row_index for cell in row):
-            header_count += 1
-        else:
-            break
+    num_cols = int(getattr(item.data, "num_cols", len(grid[0]) if grid else 0))
+    header_count = _semantic_header_count(grid, num_cols)
 
     raw_headers: list[str] = []
-    for column_index in range(item.data.num_cols):
+    for column_index in range(num_cols):
         parts: list[str] = []
         for row_index in range(header_count):
             value = _clean(grid[row_index][column_index].text)
@@ -231,6 +291,23 @@ def _table_headers_and_rows(item, document) -> tuple[list[str], list[dict[str, s
     try:
         frame = item.export_to_dataframe(document)
         headers = _unique_headers(frame.columns)
+
+        # The DataFrame has already applied Docling's semantic header flags. If
+        # the leading grid row has only partial header coverage, or its resulting
+        # labels look like prose, rebuild from the raw grid with our stricter
+        # rule so the alleged header remains available as ordinary row data.
+        grid = getattr(item.data, "grid", None)
+        if grid:
+            num_cols = int(getattr(item.data, "num_cols", len(grid[0])))
+            first_has_header_flag = any(
+                getattr(cell, "column_header", False) for cell in grid[0]
+            )
+            ambiguous_header = first_has_header_flag and not _header_row_is_semantic(
+                grid[0], 0, num_cols
+            )
+            if ambiguous_header or _headers_are_suspicious(headers):
+                return _grid_headers_and_rows(item)
+
         rows = [
             {header: _cell_value(value) for header, value in zip(headers, values)}
             for values in frame.itertuples(index=False, name=None)
@@ -269,6 +346,150 @@ def _table_block(item, document, page_start: int, page_end: int, section: str):
         page_end=page_end,
         section=section,
     )
+
+
+def _row_values(row: dict[str, str], headers: list[str]) -> list[str]:
+    return [_clean(row.get(header, "")) for header in headers]
+
+
+def _physical_first_row(block: StructuredTableBlock) -> list[str]:
+    """Recover row zero from Docling cells when it was promoted to headers."""
+    values = [""] * len(block.table_headers)
+    for cell in block.table_cells:
+        if not (cell.row_start <= 0 < cell.row_end) or not cell.text:
+            continue
+        start = max(0, cell.column_start)
+        end = min(len(values), max(start + 1, cell.column_end))
+        for column_index in range(start, end):
+            values[column_index] = cell.text
+    return values
+
+
+def _single_nonempty_column(values: list[str]) -> int | None:
+    populated = [index for index, value in enumerate(values) if value.strip()]
+    return populated[0] if len(values) > 1 and len(populated) == 1 else None
+
+
+def _rekey_rows(
+    rows: list[dict[str, str]], old_headers: list[str], new_headers: list[str]
+) -> list[dict[str, str]]:
+    """Map rows positionally when a continuation table inherits prior headers."""
+    return [
+        {
+            header: value
+            for header, value in zip(new_headers, _row_values(row, old_headers))
+        }
+        for row in rows
+    ]
+
+
+def _append_continuation(existing: str, continuation: str) -> str:
+    existing, continuation = _clean(existing), _clean(continuation)
+    if not existing:
+        return continuation
+    if not continuation or continuation == existing or existing.endswith(continuation):
+        return existing
+    return f"{existing} {continuation}"
+
+
+def _repair_continued_table(
+    previous: StructuredTableBlock, current: StructuredTableBlock
+) -> bool:
+    """Repair one likely page-boundary table fragment in place.
+
+    Returns true only when a sparse leading row was consumed into the prior
+    table's final row. Header reuse can still occur without consuming a row.
+    """
+    old_headers = list(current.table_headers)
+    same_width = bool(previous.table_headers) and len(previous.table_headers) == len(
+        old_headers
+    )
+    adjacent_page = current.page_start == previous.page_end + 1
+    same_section = _clean(current.section).casefold() == _clean(
+        previous.section
+    ).casefold()
+    if not (same_width and adjacent_page and same_section):
+        return False
+
+    same_headers = [_clean(header).casefold() for header in old_headers] == [
+        _clean(header).casefold() for header in previous.table_headers
+    ]
+    suspicious_headers = _headers_are_suspicious(old_headers)
+
+    # A suspicious header may itself be physical row zero, before the rows in
+    # the exported DataFrame. Prefer that raw row when it has the sparse shape;
+    # otherwise inspect the first extracted data row. If both representations
+    # contain row zero, remember to remove its duplicate after merging.
+    extracted_values = (
+        _row_values(current.table_rows[0], old_headers) if current.table_rows else []
+    )
+    first_values = extracted_values
+    continuation_column = _single_nonempty_column(first_values)
+    came_from_rows = continuation_column is not None
+    if suspicious_headers:
+        physical_values = _physical_first_row(current)
+        physical_column = _single_nonempty_column(physical_values)
+        if physical_column is not None:
+            first_values = physical_values
+            continuation_column = physical_column
+            came_from_rows = bool(current.table_rows) and (
+                extracted_values == physical_values
+            )
+
+    # Reusing unrelated headers solely because the column count matches is too
+    # aggressive. Require matching headers, a suspicious header shape, or the
+    # strong sparse-row continuation signal described above.
+    if not (same_headers or suspicious_headers or continuation_column is not None):
+        return False
+
+    if old_headers != previous.table_headers:
+        current.table_rows = _rekey_rows(
+            current.table_rows, old_headers, previous.table_headers
+        )
+        current.table_headers = list(previous.table_headers)
+    if not current.caption:
+        current.caption = previous.caption
+
+    if continuation_column is None or not previous.table_rows:
+        return False
+
+    if came_from_rows:
+        current.table_rows.pop(0)
+    target_header = previous.table_headers[continuation_column]
+    previous.table_rows[-1][target_header] = _append_continuation(
+        previous.table_rows[-1].get(target_header, ""),
+        first_values[continuation_column],
+    )
+    # The merged row now has content from both pages, so its table block must
+    # carry the expanded provenance used by downstream citations.
+    previous.page_end = max(previous.page_end, current.page_start)
+    return True
+
+
+def _normalize_split_tables(blocks: list[DocumentBlock]) -> list[DocumentBlock]:
+    """Normalize adjacent page-split tables before table-row chunking.
+
+    Only consecutive table blocks in the same section are considered. This
+    keeps the repair local and avoids joining same-width but unrelated tables
+    separated by prose or a new section.
+    """
+    normalized: list[DocumentBlock] = []
+    for block in blocks:
+        if not isinstance(block, StructuredTableBlock):
+            normalized.append(block)
+            continue
+
+        previous = normalized[-1] if normalized else None
+        consumed = False
+        if isinstance(previous, StructuredTableBlock):
+            consumed = _repair_continued_table(previous, block)
+
+        # A fragment containing only the consumed continuation cell contributes
+        # no independent retrieval row. Its content and page are already on the
+        # preceding table, while the full original Markdown remains on disk.
+        if not (consumed and not block.table_rows):
+            normalized.append(block)
+    return normalized
 
 
 def _caption_refs(items: list[tuple[object, int]]) -> set[str]:
@@ -326,7 +547,7 @@ def _extract_blocks(document) -> list[DocumentBlock]:
                     section=current_section,
                 )
             )
-    return blocks
+    return _normalize_split_tables(blocks)
 
 
 def load_pdf(path: Path, markdown_dir: Path | None = None) -> LoadedDoc:
