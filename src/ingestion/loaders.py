@@ -365,6 +365,43 @@ def _physical_first_row(block: StructuredTableBlock) -> list[str]:
     return values
 
 
+def _continuation_appended_to_headers(
+    block: StructuredTableBlock, expected_headers: list[str]
+) -> list[str]:
+    """Recover text Docling appended to a repeated page header.
+
+    At some page boundaries TableFormer puts continuation prose in the same
+    physical cell as a repeated column label. ``export_to_dataframe`` keeps the
+    clean label as the DataFrame column name, so that prose otherwise disappears
+    from both headers and rows. Accept the suffix only when every populated cell
+    in physical row zero starts with its expected header and exactly one column
+    has extra text. This keeps the repair specific to repeated table headers.
+    """
+    if not expected_headers or len(block.table_headers) != len(expected_headers):
+        return []
+
+    physical_values = _physical_first_row(block)
+    suffixes = [""] * len(expected_headers)
+    matched_columns = 0
+    for column_index, (physical, expected) in enumerate(
+        zip(physical_values, expected_headers)
+    ):
+        physical = _clean(physical)
+        expected = _clean(expected)
+        if not physical:
+            continue
+        if not expected or not physical.casefold().startswith(expected.casefold()):
+            return []
+
+        matched_columns += 1
+        suffixes[column_index] = physical[len(expected) :].strip(" \t:-")
+
+    populated_suffixes = [suffix for suffix in suffixes if suffix]
+    if matched_columns != len(expected_headers) or len(populated_suffixes) != 1:
+        return []
+    return suffixes
+
+
 def _single_nonempty_column(values: list[str]) -> int | None:
     populated = [index for index, value in enumerate(values) if value.strip()]
     return populated[0] if len(values) > 1 and len(populated) == 1 else None
@@ -426,6 +463,20 @@ def _repair_continued_table(
     first_values = extracted_values
     continuation_column = _single_nonempty_column(first_values)
     came_from_rows = continuation_column is not None
+
+    # A repeated page header can share its final physical cell with prose that
+    # continues the preceding page's last row. The DataFrame exposes only the
+    # clean header, so inspect raw cells even when the exported headers look
+    # completely normal.
+    header_suffixes = _continuation_appended_to_headers(
+        current, previous.table_headers
+    )
+    header_suffix_column = _single_nonempty_column(header_suffixes)
+    if header_suffix_column is not None:
+        first_values = header_suffixes
+        continuation_column = header_suffix_column
+        came_from_rows = False
+
     if suspicious_headers:
         physical_values = _physical_first_row(current)
         physical_column = _single_nonempty_column(physical_values)

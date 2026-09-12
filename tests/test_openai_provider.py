@@ -141,6 +141,26 @@ def test_proven_mode_retries_once_then_raises(provider):
     assert calls["n"] == 3                    # 1 success + failure + 1 retry
 
 
+def test_proven_mode_uses_a_corrective_prompt_after_truncated_json(provider):
+    calls = {"n": 0}
+
+    def handler(kw):
+        calls["n"] += 1
+        if calls["n"] == 2:
+            return _response('{"label": "unfinished')
+        return _response('{"label": "fixed", "score": 8}')
+
+    p = provider(handler)
+    p.structured("s", "first", Answer)  # establish json_schema mode
+
+    assert p.structured("s", "second", Answer) == Answer(label="fixed", score=8)
+    retry_system = p.completions.calls[-1]["messages"][0]["content"]
+    retry_user = p.completions.calls[-1]["messages"][1]["content"]
+    assert retry_user == "second"
+    assert "previous response was malformed or incomplete" in retry_system
+    assert len(p.completions.calls) == 3
+
+
 def test_reasoning_wrapper_around_json_is_tolerated(provider):
     p = provider(
         lambda kw: _response('<think>hmm</think>\n```json\n{"label":"g","score":7}\n```')

@@ -300,6 +300,59 @@ def test_normalization_recovers_a_continuation_promoted_to_headers():
     ]
 
 
+def test_normalization_recovers_continuation_appended_to_repeated_header():
+    headers = ["CSF Element", "Description", "Priority", "Notes"]
+    continuation = (
+        "assist with maintaining cross-references between asset inventories and "
+        "sources of vulnerability disclosures."
+    )
+    previous = _table_block_for_test(
+        page=18,
+        headers=headers,
+        rows=[
+            {
+                "CSF Element": "ID.RA-08",
+                "Description": "Vulnerability disclosures are handled",
+                "Priority": "Medium",
+                "Notes": "See [SP800-150] for data formats that may",
+            }
+        ],
+    )
+    cells = [
+        StructuredTableCell(
+            text=header if header != "Notes" else f"Notes {continuation}",
+            row_start=0,
+            row_end=1,
+            column_start=column,
+            column_end=column + 1,
+            is_column_header=True,
+        )
+        for column, header in enumerate(headers)
+    ]
+    current = _table_block_for_test(
+        page=19,
+        headers=headers,
+        rows=[
+            {
+                "CSF Element": "ID.RA-09",
+                "Description": "Software integrity is assessed",
+                "Priority": "Medium",
+                "Notes": "See the notes for ID.RA.",
+            }
+        ],
+        cells=cells,
+    )
+
+    normalized = _normalize_split_tables([previous, current])
+
+    assert normalized == [previous, current]
+    assert previous.page_end == 19
+    assert previous.table_rows[-1]["Notes"] == (
+        "See [SP800-150] for data formats that may " + continuation
+    )
+    assert current.table_rows[0]["CSF Element"] == "ID.RA-09"
+
+
 def test_normalization_does_not_join_unrelated_same_width_tables():
     previous = _table_block_for_test(
         page=7,

@@ -61,6 +61,14 @@ _FATAL = (
     InternalServerError,
 )
 
+_CORRECTIVE_RETRY = """
+
+Your previous response was malformed or incomplete. Return the complete JSON
+object again and make it concise. Include every required field, keep explanatory
+strings to at most two short sentences, and do not repeat or summarize the
+evidence beyond what the schema requires.
+"""
+
 
 class OpenAIProvider(LLMProvider):
     name = "openai"
@@ -155,6 +163,7 @@ class OpenAIProvider(LLMProvider):
         )
 
         for mode in self._modes():
+            text = ""
             # Parsing is inside the probe: a server that silently ignores an
             # unknown parameter answers 200 with prose, which only shows up as a
             # parse failure. Treating that as "mode unsupported" is what lets the
@@ -187,6 +196,10 @@ class OpenAIProvider(LLMProvider):
                     mode=mode,
                     error=str(exc),
                     fallback=self._mode is None,
+                    finish_reason=getattr(self, "_last_finish_reason", None),
+                    usage=getattr(self, "_last_usage", {}),
+                    raw_chars=len(text),
+                    output=payload(text),
                 )
                 if self._mode is not None:
                     break            # a proven mode failed: retry below, once
@@ -210,9 +223,14 @@ class OpenAIProvider(LLMProvider):
             return result
 
         if self._mode is not None:
-            # Proven mode, transient failure - one retry before giving up.
+            # A deterministic local model often repeats malformed output when
+            # given the identical prompt. Make the single retry corrective and
+            # explicitly concise so an incomplete object is not reproduced.
+            text = ""
             try:
-                text = self._call(self._mode, system, user, schema, json_schema)
+                text = self._call(
+                    self._mode, system + _CORRECTIVE_RETRY, user, schema, json_schema
+                )
                 result = validate(schema, extract_json(text))
                 log_event(
                     log,
@@ -230,6 +248,19 @@ class OpenAIProvider(LLMProvider):
                 )
                 return result
             except Exception as exc:
+                log_event(
+                    log,
+                    "llm.structured_retry_failed",
+                    provider=self.name,
+                    model=self.model,
+                    schema=schema.__name__,
+                    mode=self._mode,
+                    error=str(exc),
+                    finish_reason=getattr(self, "_last_finish_reason", None),
+                    usage=getattr(self, "_last_usage", {}),
+                    raw_chars=len(text),
+                    output=payload(text),
+                )
                 raise LLMError(
                     f"{self._mode} request failed twice for {schema.__name__}: {exc}"
                 ) from exc
@@ -255,6 +286,8 @@ class OpenAIProvider(LLMProvider):
             "max_tokens": settings.llm_max_tokens,
             "temperature": settings.llm_temperature,
         }
+        self._last_usage = {}
+        self._last_finish_reason = None
         if mode == "json_schema":
             kwargs["response_format"] = {
                 "type": "json_schema",
