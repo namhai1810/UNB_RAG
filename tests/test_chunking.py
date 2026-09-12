@@ -50,6 +50,7 @@ def test_paragraph_chunks_respect_token_budget():
     chunks = chunk_document(_doc(blocks))
     assert chunks
     assert all(c.n_tokens <= 40 for c in chunks)
+    assert [c.chunk_index for c in chunks] == list(range(len(chunks)))
     assert {c.chunk_type for c in chunks} == {"paragraph"}
 
 

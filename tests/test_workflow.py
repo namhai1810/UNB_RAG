@@ -6,6 +6,7 @@ import pytest
 from src.agents.triage_agent import TriageDecision
 from src.graph import workflow
 from src.graph.state import initial_state
+from src.retrieval import Evidence
 
 
 @pytest.fixture
@@ -24,6 +25,22 @@ def no_retrieval(monkeypatch, evidence_factory):
 
 def run(query: str = "How do we contain an incident?"):
     return workflow.build_graph().invoke(initial_state(query))
+
+
+def test_merge_prefers_a_direct_hit_over_the_same_neighbor_chunk():
+    neighbor = Evidence(
+        chunk_id="shared", source="guide.pdf", text="Context",
+        rerank_score=0.0, is_neighbor=True, seed_chunk_id="seed",
+    )
+    direct = Evidence(
+        chunk_id="shared", source="guide.pdf", text="Direct hit",
+        rerank_score=0.7,
+    )
+
+    merged = workflow._merge_evidence([neighbor], [direct])
+
+    assert merged == [direct]
+    assert merged[0].is_neighbor is False
 
 
 # ----------------------------------------------------------------- routing

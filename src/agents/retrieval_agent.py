@@ -1,7 +1,8 @@
 """Agent 2 - Retrieval.
 
-Runs every query from the plan through hybrid search, then merges the result
-lists with reciprocal rank fusion. Multi-query matters here: "eradication steps"
+Runs every query from the plan through hybrid search, merges the result lists
+with reciprocal rank fusion, then adds adjacent context around the best seeds.
+Multi-query matters here: "eradication steps"
 and "removing attacker persistence" surface different chunks of the same
 document, and fusing them beats picking one phrasing and hoping.
 
@@ -93,19 +94,25 @@ def retrieve(
         return []
 
     fused = _fuse(ranked_lists, top_k)
+    expanded = retriever.expand_neighbors(
+        fused,
+        exclude_chunk_ids=exclude,
+    )
     log_event(
         log,
         "retrieval.end",
         round=round_no,
         query_count=len(queries),
         unique_chunks=len({e.chunk_id for items in ranked_lists for e in items}),
+        seed_chunks=len(fused),
+        neighbor_chunks=len(expanded) - len(fused),
         evidence=[
             {
                 "chunk_id": item.chunk_id,
                 "source": item.source,
                 "rerank_score": round(item.rerank_score, 4),
             }
-            for item in fused
+            for item in expanded
         ],
     )
-    return fused
+    return expanded

@@ -138,6 +138,23 @@ class VectorStore:
         )
         return [{**point.payload, "fusion_score": point.score} for point in response.points]
 
+    def get_chunks(self, chunk_ids: list[str]) -> list[dict]:
+        """Load chunk payloads by their stable IDs without running a vector search."""
+        if not chunk_ids:
+            return []
+
+        records = self.client.retrieve(
+            collection_name=self.collection,
+            ids=[_point_id(chunk_id) for chunk_id in chunk_ids],
+            with_payload=True,
+        )
+        by_chunk_id = {
+            record.payload["chunk_id"]: record.payload
+            for record in records
+            if record.payload and record.payload.get("chunk_id")
+        }
+        return [by_chunk_id[chunk_id] for chunk_id in chunk_ids if chunk_id in by_chunk_id]
+
 
 def build_index(chunks: list[Chunk], store: VectorStore | None = None) -> VectorStore:
     dense_encoder = get_dense_encoder()

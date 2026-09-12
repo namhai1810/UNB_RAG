@@ -82,13 +82,23 @@ def clarify_node(state: RAGState) -> dict:
 
 
 def _merge_evidence(existing: list[Evidence], fresh: list[Evidence]) -> list[Evidence]:
-    """Union by chunk id, keeping the higher cross-encoder score."""
+    """Union by chunk ID, preferring direct hits and then stronger scores."""
     by_id: dict[str, Evidence] = {e.chunk_id: e for e in existing}
     for item in fresh:
         current = by_id.get(item.chunk_id)
-        if current is None or item.rerank_score > current.rerank_score:
+        if (
+            current is None
+            or (current.is_neighbor and not item.is_neighbor)
+            or (
+                current.is_neighbor == item.is_neighbor
+                and item.rerank_score > current.rerank_score
+            )
+        ):
             by_id[item.chunk_id] = item
-    return sorted(by_id.values(), key=lambda e: e.rerank_score, reverse=True)
+    return sorted(
+        by_id.values(),
+        key=lambda evidence: (evidence.is_neighbor, -evidence.rerank_score),
+    )
 
 
 @logged_node(log, "retrieve")
@@ -104,7 +114,11 @@ def retrieve_node(state: RAGState) -> dict:
 
     # On a retry, the previous round's evidence was judged insufficient - keep it
     # only alongside the new material, ranked together, capped at the budget.
-    merged = _merge_evidence(state.get("evidence", []), fresh)[: settings.top_k_rerank]
+    working_set_limit = max(
+        settings.top_k_rerank,
+        settings.neighbor_max_total_chunks,
+    )
+    merged = _merge_evidence(state.get("evidence", []), fresh)[:working_set_limit]
 
     return {
         "round": round_no,

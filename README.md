@@ -30,6 +30,7 @@ system exists to prevent.
                                     BGE-M3 dense ─┴─ BM25 sparse      │
                                           RRF fusion in Qdrant        │
                                        bge-reranker-v2-m3 rerank      │
+                                      adjacent chunks from doc/section │
                                                   │                   │
                                       ┌───────────▼───────────┐       │
                                       │ Agent 3: Verifier     │       │
@@ -47,7 +48,7 @@ system exists to prevent.
 | Agent | Role | LLM? |
 |---|---|---|
 | 1. Triage | Route in-scope / ambiguous / out-of-scope; rewrite the query into 2-3 retrieval queries | yes |
-| 2. Retrieval | Hybrid search per query, reciprocal rank fusion across queries | no - deterministic |
+| 2. Retrieval | Hybrid search per query, reciprocal rank fusion, reranking, and adjacent-chunk expansion | no - deterministic |
 | 3. Verifier | Decide whether the evidence can ground an answer; name what is missing and what to search instead | yes |
 | 4. Answer | Write the answer from verified passages only, with inline `[n]` markers | yes |
 
@@ -62,6 +63,26 @@ registry paths, tool names - which are precisely what a security question hinges
 on. BM25 alone loses paraphrase. Both branches live in one Qdrant collection and
 are fused with reciprocal rank fusion, then a cross-encoder reranks the survivors:
 fusion buys recall, the cross-encoder buys precision.
+
+### Adjacent-chunk context
+
+After multi-query fusion selects the reranked seed chunks, retrieval loads nearby
+chunks directly from Qdrant by their stable IDs. This adds surrounding context
+without another embedding search and keeps every neighbor's own page and section
+metadata available for citations. The default policy takes one chunk before and
+one after each seed, stays within the same document and section, removes
+duplicates, and caps the complete evidence set at 12 chunks.
+
+```dotenv
+NEIGHBOR_CHUNK_WINDOW=1
+NEIGHBOR_MAX_TOTAL_CHUNKS=12
+NEIGHBOR_SAME_SECTION_ONLY=true
+```
+
+Set `NEIGHBOR_CHUNK_WINDOW=0` to disable expansion. Set
+`NEIGHBOR_SAME_SECTION_ONLY=false` when context is allowed to cross section
+boundaries. `TOP_K_RERANK` still controls the number of relevance-ranked seed
+chunks; `NEIGHBOR_MAX_TOTAL_CHUNKS` controls seeds plus adjacent context.
 
 ---
 
@@ -94,8 +115,10 @@ Every ingest always saves Docling's full Markdown export under
 `data/processed/markdown/<pdf-name>.md` for visual inspection. Markdown is the audit representation, not the retrieval
 representation. Each structured table row is serialized as `header: value`
 pairs with section, caption, and row identity. Oversized cells are split while
-the row identifier is repeated. Qdrant also retains `table_headers`, the original
-`table_rows`, row range, `chunk_type`, section, and Docling page provenance.
+the row identifier is repeated. Qdrant also retains `chunk_index`,
+`table_headers`, the original `table_rows`, row range, `chunk_type`, section, and
+Docling page provenance. The stable per-document `chunk_index` is used to load
+adjacent context after reranking.
 
 Docling uses TableFormer `accurate` mode by default. Set `DOCLING_TABLE_MODE=fast`
 when throughput matters more than table fidelity, or `DOCLING_DO_OCR=true` for
@@ -216,7 +239,7 @@ fast deterministic regression signal after changing a chunk size or a prompt.
 |---|---|
 | Real corpus conversion | 3 Markdown files; 34 tables; 167 prose + 197 table-row chunks |
 | Temporary Qdrant payload smoke test | text plus structured table metadata persisted |
-| Unit + integration tests | 60 passed |
+| Unit + integration tests | 77 passed |
 
 Retrieval quality metrics should be re-baselined after rebuilding the production
 index because changing the parser and chunk boundaries changes its candidates.
@@ -234,8 +257,8 @@ pytest tests/ -q
 No GPU, API key, or network required: the LLM and PDF conversion are faked where
 needed, and chunking uses a word tokenizer. The suite covers Docling block
 extraction, persisted Markdown, structured headers/rows/cells, `header: value`
-row chunks, oversized-cell splitting, chunk budgets, rank fusion, citation
-integrity, and every path through
+row chunks, oversized-cell splitting, chunk budgets, rank fusion, adjacent-chunk
+boundaries/deduplication, citation integrity, and every path through
 the graph (rejection, clarification, the rewrite-retry loop, budget exhaustion,
 and refusal to answer).
 
@@ -255,7 +278,7 @@ src/
     dense.py             BGE-M3 bi-encoder
     sparse.py            BM25 sparse vectors (FastEmbed)
     reranker.py          bge-reranker-v2-m3 cross-encoder
-    __init__.py          HybridRetriever: search -> rerank -> Evidence
+    __init__.py          HybridRetriever: search -> rerank -> adjacent context
   agents/                the four agents, each a plain typed function
   graph/
     state.py             the state passed between nodes

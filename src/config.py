@@ -73,8 +73,11 @@ class Settings(BaseSettings):
     top_k_dense: int = 30                   # candidates pulled from the dense branch
     top_k_sparse: int = 30                  # candidates pulled from the BM25 branch
     top_k_fused: int = 20                   # kept after reciprocal-rank fusion
-    top_k_rerank: int = 6                   # handed to the verifier / answer agent
+    top_k_rerank: int = 6                   # reranked seed chunks
     rerank_score_threshold: float = 0.0     # bge-reranker-v2-m3 logit; >0 ~ relevant
+    neighbor_chunk_window: int = Field(default=1, ge=0)
+    neighbor_max_total_chunks: int = Field(default=12, ge=1)
+    neighbor_same_section_only: bool = True
 
     # ---------------------------------------------------------- agent loops
     max_retrieval_rounds: int = 3           # verifier -> rewrite -> retrieve budget

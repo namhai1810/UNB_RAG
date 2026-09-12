@@ -25,6 +25,7 @@ _SENT_RE = re.compile(r"(?<=[.!?])\s+")
 class Chunk:
     chunk_id: str
     doc_id: str
+    chunk_index: int
     source: str
     title: str
     section: str
@@ -282,10 +283,12 @@ def chunk_document(doc: LoadedDoc) -> list[Chunk]:
         table_block: StructuredTableBlock | None = None,
         table_unit: _TableUnit | None = None,
     ) -> None:
+        chunk_index = len(chunks)
         chunks.append(
             Chunk(
-                chunk_id=f"{doc.doc_id}-{len(chunks):05d}",
+                chunk_id=f"{doc.doc_id}-{chunk_index:05d}",
                 doc_id=doc.doc_id,
+                chunk_index=chunk_index,
                 source=doc.source,
                 title=doc.title,
                 section=section,
