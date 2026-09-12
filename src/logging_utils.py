@@ -158,7 +158,13 @@ def state_summary(state: dict[str, Any]) -> dict[str, Any]:
                     "chunk_id": item.chunk_id,
                     "source": item.source,
                     "section": item.section,
+                    "chunk_type": item.chunk_type,
                     "pages": [item.page_start, item.page_end],
+                    "table_rows": (
+                        [item.table_row_start, item.table_row_end]
+                        if item.chunk_type == "table"
+                        else None
+                    ),
                     "rerank_score": round(item.rerank_score, 4),
                     "round": item.round,
                 }

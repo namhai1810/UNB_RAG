@@ -48,13 +48,19 @@ def cmd_ingest(args: argparse.Namespace) -> int:
     from src.ingestion.indexing import VectorStore, build_index
     from src.ingestion.loaders import load_corpus
 
-    with console.status("[bold]Loading PDFs..."):
+    with console.status("[bold]Converting PDFs with Docling..."):
         docs = load_corpus()
     console.print(f"Loaded [bold]{len(docs)}[/bold] documents")
+    console.print(f"Saved Docling Markdown to [cyan]{settings.resolved_markdown_dir}[/cyan]")
 
     with console.status("[bold]Chunking..."):
         chunks = chunk_corpus(docs)
-    console.print(f"Produced [bold]{len(chunks)}[/bold] chunks")
+    paragraph_count = sum(chunk.chunk_type == "paragraph" for chunk in chunks)
+    table_count = sum(chunk.chunk_type == "table" for chunk in chunks)
+    console.print(
+        f"Produced [bold]{len(chunks)}[/bold] chunks "
+        f"([bold]{paragraph_count}[/bold] paragraph, [bold]{table_count}[/bold] table-row)"
+    )
 
     if args.dump:
         out = settings.processed_dir / "chunks.jsonl"
@@ -202,6 +208,9 @@ def cmd_status(args: argparse.Namespace) -> int:
     table.add_row("Embedding", settings.embedding_model)
     table.add_row("Reranker", settings.reranker_model)
     table.add_row("Device", settings.device)
+    table.add_row("Docling table mode", settings.docling_table_mode)
+    table.add_row("Docling OCR", str(settings.docling_do_ocr))
+    table.add_row("Markdown output", str(settings.resolved_markdown_dir))
     table.add_row("Qdrant path", str(settings.qdrant_path))
     with VectorStore() as store:
         table.add_row("Indexed chunks", str(store.count()))

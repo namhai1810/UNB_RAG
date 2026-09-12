@@ -80,9 +80,27 @@ python -m src.main ingest          # add --dump to also write chunks.jsonl
 python -m src.main status          # config + how many chunks are indexed
 ```
 
-First run downloads BGE-M3 (~2.3 GB) and bge-reranker-v2-m3 (~2.2 GB) to
-`~/.cache/huggingface`. Indexing 3 NIST/CISA PDFs takes well under a minute on a
-GPU and produces ~125 chunks.
+Ingestion now follows this structure-preserving path:
+
+```text
+PDF -> Docling -> structured document -> loader
+                  |-> prose -> ContentBlock -> semantic paragraph chunks --|
+                  |-> table -> StructuredTableBlock                         |
+                              (caption, headers, rows/cells, page, section)  |
+                              -> header:value row chunks --------------------|-> Qdrant
+```
+
+Every ingest always saves Docling's full Markdown export under
+`data/processed/markdown/<pdf-name>.md` for visual inspection. Markdown is the audit representation, not the retrieval
+representation. Each structured table row is serialized as `header: value`
+pairs with section, caption, and row identity. Oversized cells are split while
+the row identifier is repeated. Qdrant also retains `table_headers`, the original
+`table_rows`, row range, `chunk_type`, section, and Docling page provenance.
+
+Docling uses TableFormer `accurate` mode by default. Set `DOCLING_TABLE_MODE=fast`
+when throughput matters more than table fidelity, or `DOCLING_DO_OCR=true` for
+scanned/image-only PDFs. The first run downloads Docling and embedding models to
+the local Hugging Face cache.
 
 ### LLM backend
 
@@ -192,16 +210,18 @@ hold the answer, source precision, citation integrity, keyword recall, and
 abstention correctness. It is deliberately not an LLM judge - the point is a
 fast deterministic regression signal after changing a chunk size or a prompt.
 
-### Measured so far
+### Verified after the Docling migration
 
 | What | Result |
 |---|---|
-| Retrieval hit@6 against expected source documents | **15/15 (100%)** |
-| Section labels resolved from PDF bookmarks | 100% / 100% / 96% per document |
-| Unit + integration tests | 46 passed |
+| Real corpus conversion | 3 Markdown files; 34 tables; 167 prose + 197 table-row chunks |
+| Temporary Qdrant payload smoke test | text plus structured table metadata persisted |
+| Unit + integration tests | 60 passed |
 
-The end-to-end agent metrics need a configured LLM backend; the graph itself is
-covered offline by `tests/test_workflow.py` using a scripted fake model.
+Retrieval quality metrics should be re-baselined after rebuilding the production
+index because changing the parser and chunk boundaries changes its candidates.
+The end-to-end agent metrics still need a configured LLM backend; the graph itself
+is covered offline by `tests/test_workflow.py` using a scripted fake model.
 
 ---
 
@@ -211,11 +231,13 @@ covered offline by `tests/test_workflow.py` using a scripted fake model.
 pytest tests/ -q
 ```
 
-No GPU, API key, or network required: the LLM is faked and chunking uses a word
-tokenizer. The suite covers JSON extraction from messy model output, header/footer
-stripping, chunk budgets and section boundaries, rank fusion, citation integrity,
-and every path through the graph (rejection, clarification, the rewrite-retry
-loop, budget exhaustion, and refusal to answer).
+No GPU, API key, or network required: the LLM and PDF conversion are faked where
+needed, and chunking uses a word tokenizer. The suite covers Docling block
+extraction, persisted Markdown, structured headers/rows/cells, `header: value`
+row chunks, oversized-cell splitting, chunk budgets, rank fusion, citation
+integrity, and every path through
+the graph (rejection, clarification, the rewrite-retry loop, budget exhaustion,
+and refusal to answer).
 
 ---
 
@@ -226,8 +248,8 @@ src/
   config.py              all settings, overridable from .env
   llm/                   provider abstraction: base, anthropic, openai-compatible
   ingestion/
-    loaders.py           PyMuPDF -> pages with section + page metadata, chrome stripped
-    chunking.py          token-aware chunking, section-aware boundaries
+    loaders.py           Docling -> Markdown + typed prose/table structures
+    chunking.py          semantic prose + header:value table-row chunks
     indexing.py          Qdrant collection (dense + sparse) and hybrid query
   retrieval/
     dense.py             BGE-M3 bi-encoder
@@ -247,12 +269,12 @@ tests/                   offline test suite
 
 ## Design notes
 
-**Section labels come from the text, not the page.** PyMuPDF's bookmark map is
-page-granular, so a section starting halfway down a page mislabels everything
-above it. The chunker instead detects bookmark titles line by line in the
-extracted text (100% / 100% / 96% of bookmarks recovered across the three
-documents), and falls back to the page map only after it has disagreed for two
-consecutive pages - which means a heading was genuinely missed.
+**Document structure survives extraction.** The loader walks Docling's reading-order
+document tree instead of flattening each PDF page. Section headers update the
+active section, tables are exported as Markdown `TableItem`s, and every block
+retains its Docling page provenance. Repeated page chrome is filtered only from
+retrieval blocks; the saved Markdown remains the complete Docling export so it
+can be audited directly.
 
 **Citations are validated, not trusted.** The answer agent reports which passages
 it used, but only the `[n]` markers actually present in the answer text are
@@ -279,7 +301,7 @@ Qdrant server if you need concurrent readers.
 
 - The corpus is English-only; BGE-M3 is multilingual, so Vietnamese queries will
   retrieve, but the answer agent is prompted in English and the sources are English.
-- One long heading in the #StopRansomware Guide wraps across two lines and is not
-  recovered as a section label; the page number in its citations is still correct.
+- Docling can represent a table spanning a page boundary as multiple consecutive
+  tables. They remain separate table chunks with correct page citations.
 - Evaluation scores keyword presence, not factual correctness. Add an LLM judge on
   top of `results.csv` if you need semantic scoring.

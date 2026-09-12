@@ -18,8 +18,14 @@ class Settings(BaseSettings):
     # ---------------------------------------------------------------- paths
     raw_dir: Path = ROOT / "data" / "raw"
     processed_dir: Path = ROOT / "data" / "processed"
+    markdown_dir: Path = ROOT / "data" / "processed" / "markdown"
     qdrant_path: Path = ROOT / "data" / "processed" / "qdrant"
     collection: str = "cyber_docs"
+
+    # -------------------------------------------------------------- Docling
+    # Born-digital PDFs already contain a text layer. Enable this for scans.
+    docling_do_ocr: bool = False
+    docling_table_mode: Literal["fast", "accurate"] = "accurate"
 
     # ------------------------------------------------------------ LLM layer
     # "anthropic" -> Claude API ; "openai" -> any OpenAI-compatible endpoint
@@ -78,6 +84,11 @@ class Settings(BaseSettings):
     def resolved_log_file(self) -> Path:
         """Resolve relative LOG_FILE paths from the project root."""
         return self.log_file if self.log_file.is_absolute() else ROOT / self.log_file
+
+    @property
+    def resolved_markdown_dir(self) -> Path:
+        """Resolve relative MARKDOWN_DIR paths from the project root."""
+        return self.markdown_dir if self.markdown_dir.is_absolute() else ROOT / self.markdown_dir
 
     @property
     def is_anthropic(self) -> bool:

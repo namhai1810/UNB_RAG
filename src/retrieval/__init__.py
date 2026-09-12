@@ -21,6 +21,12 @@ class Evidence(BaseModel):
     section: str = ""
     page_start: int = 0
     page_end: int = 0
+    chunk_type: str = "paragraph"
+    table_caption: str = ""
+    table_headers: list[str] = Field(default_factory=list)
+    table_rows: list[dict[str, str]] = Field(default_factory=list)
+    table_row_start: int = 0
+    table_row_end: int = 0
     text: str
     fusion_score: float = 0.0
     rerank_score: float = 0.0
@@ -87,6 +93,12 @@ class HybridRetriever:
                 section=c.get("section", ""),
                 page_start=c.get("page_start", 0),
                 page_end=c.get("page_end", 0),
+                chunk_type=c.get("chunk_type", "paragraph"),
+                table_caption=c.get("table_caption", ""),
+                table_headers=c.get("table_headers", []),
+                table_rows=c.get("table_rows", []),
+                table_row_start=c.get("table_row_start", 0),
+                table_row_end=c.get("table_row_end", 0),
                 text=c["text"],
                 fusion_score=c.get("fusion_score", 0.0),
                 rerank_score=c["rerank_score"],
