@@ -70,6 +70,101 @@ Mean latency per query: **1.076s**. Errors: **0**.
 | ret_068 | semantic | 17684aea55c3-00025 | 6ca34d2a8b1c-00020, 17684aea55c3-00010, 17684aea55c3-00009 | Which part of the CSF outlines the Functions, Categories, and Subcategories? |
 | ret_076 | lexical | 6ca34d2a8b1c-00025 | 6ca34d2a8b1c-00032, 6ca34d2a8b1c-00033, 6ca34d2a8b1c-00031 | What are the phases of the incident response life cycle model? |
 
+<!-- END_TO_END_EVALUATION_START -->
+## End-to-end and citation evaluation
+
+Generated at: `2026-09-13T06:02:13.862712+00:00`
+
+- Test cases: **100**, using the same grounded questions and gold chunks as the retrieval evaluation
+- Full path: triage → multi-query retrieval and neighbor expansion → verifier/rewrite → answer generation
+- LLM: `QuixiAI/Qwen3-30B-A3B-AWQ`; retrieval device: `cuda`
+- Maximum retrieval rounds: **3**
+
+A citation is counted as correct when its `chunk_id` is one of the case's
+`acceptable_gold_chunk_ids`. This is exact gold-chunk correctness, not merely a
+source-name match. It does not by itself prove that every generated claim is
+entailed by the cited passage.
+
+### End-to-end outcomes
+
+| Metric | Score |
+|---|---:|
+| Triage in-scope rate | 98.00% |
+| Answer produced (`answered` or `answered_partial`) | 98.00% |
+| Fully answered | 72.00% |
+| Grounded end-to-end success | 63.00% |
+| Mean retrieval rounds | 1.710 |
+| Errors | 0 |
+
+Statuses: `answered`: 72, `answered_partial`: 26, `rejected`: 2.
+
+`Grounded end-to-end success` requires both `status == answered` and at least
+one final citation to an acceptable gold chunk.
+
+### Citation correctness
+
+| Metric | Score |
+|---|---:|
+| Correct citations / all citations (micro precision) | 89 / 192 = 46.35% |
+| Mean precision among cited answers (macro) | 62.75% |
+| Gold-citation hit rate | 85.00% |
+| Primary-gold citation hit rate | 81.00% |
+| Citation-marker integrity | 95.92% |
+| Uncited-answer rate | 1.02% |
+
+### End-to-end latency
+
+| Metric | Time |
+|---|---:|
+| Mean | 39.888s |
+| Median | 28.703s |
+| P95 | 63.407s |
+| Maximum | 269.921s |
+| Mean excluding first query | 39.831s |
+
+This latency covers the complete graph and is therefore not comparable to the
+retrieval-only latency as if they measured the same work. The first query is
+reported separately because it may include lazy model and CUDA initialization.
+
+### End-to-end by paraphrase type
+
+| Group | n | Fully answered | Grounded success | Citation hit | Citation precision | Mean latency |
+|---|---:|---:|---:|---:|---:|---:|
+| lexical | 32 | 68.75% | 59.38% | 87.50% | 57.14% | 31.635s |
+| natural | 34 | 67.65% | 58.82% | 79.41% | 36.71% | 41.329s |
+| semantic | 34 | 79.41% | 70.59% | 88.24% | 50.00% | 46.215s |
+
+### End-to-end by source
+
+| Group | n | Fully answered | Grounded success | Citation hit | Citation precision | Mean latency |
+|---|---:|---:|---:|---:|---:|---:|
+| NIST.CSWP.29.pdf | 33 | 84.85% | 66.67% | 78.79% | 45.00% | 47.932s |
+| NIST.SP.800-61r3.pdf | 44 | 56.82% | 50.00% | 81.82% | 43.82% | 33.239s |
+| StopRansomware-Guide 508.pdf | 23 | 82.61% | 82.61% | 100.00% | 53.49% | 41.068s |
+
+### End-to-end by chunk type
+
+| Group | n | Fully answered | Grounded success | Citation hit | Citation precision | Mean latency |
+|---|---:|---:|---:|---:|---:|---:|
+| paragraph | 67 | 74.63% | 62.69% | 80.60% | 40.44% | 36.515s |
+| table | 33 | 66.67% | 63.64% | 93.94% | 60.71% | 46.737s |
+
+### Ten weakest end-to-end cases
+
+| ID | Status | Citation precision | Gold citation | Latency | Query |
+|---|---|---:|---:|---:|---|
+| ret_054 | answered | — | no | 25.063s | What must organizations do with suppliers and third parties regarding incident response as outlined in the GV.SC controls? |
+| ret_060 | rejected | — | no | 6.001s | What does the PR.AA element say about asset access? |
+| ret_099 | rejected | — | no | 8.717s | Who is the Community Profile designed for? |
+| ret_004 | answered | 0.00% | no | 13.612s | How does the NIST Cybersecurity Framework (CSF) 2.0 assist organizations in managing cybersecurity incidents? |
+| ret_006 | answered_partial | 0.00% | no | 67.670s | What are the key advantages of using the NIST Cybersecurity Framework 2.0 for handling cybersecurity incidents? |
+| ret_009 | answered | 0.00% | no | 30.917s | What does the CSF Tier indicate about an organization's cybersecurity practices? |
+| ret_022 | answered | 0.00% | no | 20.953s | Which part of the NIST CSF covers coordinating response activities with stakeholders? |
+| ret_023 | answered | 0.00% | no | 22.577s | What component of the NIST Cybersecurity Framework involves sharing incident information with stakeholders? |
+| ret_024 | answered | 0.00% | no | 21.820s | What CSF function includes notifying stakeholders about cybersecurity incidents? |
+| ret_050 | answered | 0.00% | no | 44.303s | How does the NIST SP 800-61r3 document aim to improve an organization's incident response capabilities through the CSF 2.0 Functions? |
+<!-- END_TO_END_EVALUATION_END -->
+
 ## Interpretation notes
 
 - Recall@K measures the fraction of acceptable gold chunks present in the first K results.
