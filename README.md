@@ -214,24 +214,47 @@ level, and any caveats.
 ## Evaluation
 
 ```bash
-python -m evaluation.evaluate                 # all 20 queries -> results.csv
-python -m evaluation.evaluate --ids q15 q19   # a subset
+python -m test_case_generation.generate_retrieval  # rebuild the 100-case benchmark
+python -m evaluation.evaluate_retrieval            # retrieval-only metrics
+python -m evaluation.evaluate_end_to_end            # full four-agent flow
+python -m evaluation.evaluate_end_to_end --resume   # resume an interrupted full run
 ```
 
-`evaluation/test_queries.json` covers in-scope lookups, cross-document synthesis,
-and four deliberate traps:
+The schema-2 benchmark contains 100 questions in 34 paraphrase groups, balanced
+between two retrieval conditions:
 
-- **q15** asks for a statistic that does not exist in the corpus - the verifier must
-  refuse rather than invent one.
-- **q16, q17** are ambiguous and must be routed to clarification, not retrieval.
-- **q19** requests operational attack capability and must be rejected.
-- **q11, q20** are attacker-behaviour questions with defensive intent and must
-  **not** be rejected - they are the over-refusal probe.
+- `single_gold`: the atomic answer is supported by exactly one chunk in the
+  corpus. This isolates ordinary exact retrieval.
+- `multi_gold`: equivalent answer evidence occurs in two or more chunks, within
+  one document, across documents, or both. Every fully supporting chunk is an
+  acceptable gold; partially supporting chunks are tracked separately.
 
-Scored metrics: triage accuracy, retrieval hit rate against the documents that
-hold the answer, source precision, citation integrity, keyword recall, and
-abstention correctness. It is deliberately not an LLM judge - the point is a
-fast deterministic regression signal after changing a chunk size or a prompt.
+The generator first proposes atomic facts from source chunks, then audits every
+corpus chunk with exact-span checks, lexical/semantic candidate discovery, and
+an evidence validator. A primary chunk records provenance only; it receives no
+special credit during scoring. See
+[`test_case_generation/README.md`](test_case_generation/README.md)
+for the reproducible construction procedure, schema, distributions, validation
+rules, and limitations.
+
+Retrieval is reported with Any-Gold Hit@K, full-gold Coverage/Recall@K, first-full-
+gold MRR, and graded nDCG (full gold = 2, partial support = 1). Metrics are split
+by `single_gold`/`multi_gold` and by duplicate scope so Hit@K cannot hide missed
+equivalent chunks. The end-to-end run executes triage, multi-query hybrid
+retrieval, neighbor expansion, verifier/rewrite retries, and answer generation;
+it reports answer outcomes, latency, retrieval metrics, and citation correctness.
+Citation correctness accepts a citation to any fully supporting gold chunk, not
+only the chunk from which the question was originally generated.
+
+The two maintained Markdown artifacts are:
+
+- [`evaluation/retrieval_evaluation.md`](evaluation/retrieval_evaluation.md):
+  retrieval and end-to-end results.
+- [`test_case_generation/README.md`](test_case_generation/README.md):
+  how the test dataset was constructed and audited.
+
+The older 20-query harness remains available as `python -m evaluation.evaluate`
+for routing and abstention regressions, but it is not the retrieval benchmark.
 
 ### Verified after the Docling migration
 
@@ -239,12 +262,13 @@ fast deterministic regression signal after changing a chunk size or a prompt.
 |---|---|
 | Real corpus conversion | 3 Markdown files; 34 tables; 167 prose + 197 table-row chunks |
 | Temporary Qdrant payload smoke test | text plus structured table metadata persisted |
-| Unit + integration tests | 77 passed |
+| Schema-2 retrieval benchmark | 100 questions; 50 single-gold + 50 multi-gold; 34 fact groups |
+| Offline unit + integration tests | 86 passed |
 
-Retrieval quality metrics should be re-baselined after rebuilding the production
-index because changing the parser and chunk boundaries changes its candidates.
-The end-to-end agent metrics still need a configured LLM backend; the graph itself
-is covered offline by `tests/test_workflow.py` using a scripted fake model.
+The committed benchmark and reports are tied to the recorded corpus fingerprint
+and chunk IDs. Rebuild both after changing the parser, corpus, or chunk boundaries.
+Retrieval evaluation needs the local index and embedding/reranker models;
+end-to-end evaluation additionally needs the configured LLM backend.
 
 ---
 
@@ -260,7 +284,9 @@ extraction, persisted Markdown, structured headers/rows/cells, `header: value`
 row chunks, oversized-cell splitting, chunk budgets, rank fusion, adjacent-chunk
 boundaries/deduplication, citation integrity, and every path through
 the graph (rejection, clarification, the rewrite-retry loop, budget exhaustion,
-and refusal to answer).
+and refusal to answer). It also checks schema-2 dataset multiplicity, any-gold
+retrieval scoring, full-gold coverage, graded nDCG, and any-full-gold citation
+correctness.
 
 ---
 
@@ -284,7 +310,8 @@ src/
     state.py             the state passed between nodes
     workflow.py          LangGraph wiring and routing
   main.py                CLI: ingest / ask / chat / status
-evaluation/              test queries, harness, results.csv
+test_case_generation/    schema-2 benchmark generator + generated JSON dataset
+evaluation/              evaluators, JSON checkpoints, combined result report
 tests/                   offline test suite
 ```
 
@@ -326,5 +353,9 @@ Qdrant server if you need concurrent readers.
   retrieve, but the answer agent is prompted in English and the sources are English.
 - Docling can represent a table spanning a page boundary as multiple consecutive
   tables. They remain separate table chunks with correct page citations.
-- Evaluation scores keyword presence, not factual correctness. Add an LLM judge on
-  top of `results.csv` if you need semantic scoring.
+- The schema-2 audit uses deterministic evidence checks plus an LLM support
+  classifier. The methodology report records this model-assisted step; manually
+  review the benchmark before using it as a high-stakes leaderboard.
+- End-to-end citation correctness verifies whether cited chunks belong to the
+  audited full-gold set. It does not by itself grade prose completeness or every
+  factual claim in the generated answer.

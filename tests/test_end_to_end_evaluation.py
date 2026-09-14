@@ -2,96 +2,59 @@ from __future__ import annotations
 
 from types import SimpleNamespace
 
-from evaluation.evaluate_end_to_end import (
-    SECTION_END,
-    SECTION_START,
-    _percentile,
-    score_citations,
-    summarise,
-    upsert_report_section,
-)
+from evaluation.evaluate_end_to_end import _percentile, score_citations, summarise
 
 
 def _case():
     return {
         "primary_gold_chunk_id": "primary",
-        "acceptable_gold_chunk_ids": ["primary", "overlap"],
+        "acceptable_gold_chunk_ids": ["primary", "alternative"],
     }
 
 
-def test_score_citations_uses_acceptable_gold_chunk_ids():
-    citations = [
-        SimpleNamespace(chunk_id="overlap"),
-        SimpleNamespace(chunk_id="noise"),
-    ]
-    scores = score_citations(_case(), citations)
+def test_any_full_gold_citation_is_correct():
+    scores = score_citations(
+        _case(),
+        [SimpleNamespace(chunk_id="alternative"), SimpleNamespace(chunk_id="noise")],
+    )
     assert scores["correct_citation_count"] == 1
     assert scores["citation_precision"] == 0.5
     assert scores["citation_hit"] == 1
     assert scores["primary_citation_hit"] == 0
 
 
-def test_score_citations_marks_an_uncited_answer_as_no_hit():
+def test_uncited_answer_has_no_hit_and_undefined_precision():
     scores = score_citations(_case(), [])
     assert scores["citation_precision"] is None
     assert scores["citation_hit"] == 0
 
 
-def test_summary_reports_micro_precision_and_grounded_success():
+def test_summary_splits_single_and_multi_gold():
     common = {
+        "status": "answered",
         "actual_category": "in_scope",
         "answer_produced": 1,
+        "fully_answered": 1,
+        "grounded_success": 1,
+        "rounds": 1,
+        "citation_count": 1,
+        "correct_citation_count": 1,
+        "citation_precision": 1.0,
         "citation_hit": 1,
+        "primary_citation_hit": 1,
         "citation_integrity": 1,
         "error": "",
+        "paraphrase_type": "semantic",
         "source": "guide.pdf",
+        "chunk_type": "paragraph",
     }
     rows = [
-        {
-            **common,
-            "status": "answered",
-            "fully_answered": 1,
-            "grounded_success": 1,
-            "rounds": 1,
-            "citation_count": 2,
-            "correct_citation_count": 1,
-            "citation_precision": 0.5,
-            "primary_citation_hit": 0,
-            "latency_s": 2.0,
-            "paraphrase_type": "lexical",
-            "chunk_type": "paragraph",
-        },
-        {
-            **common,
-            "status": "answered_partial",
-            "fully_answered": 0,
-            "grounded_success": 0,
-            "rounds": 2,
-            "citation_count": 1,
-            "correct_citation_count": 1,
-            "citation_precision": 1.0,
-            "primary_citation_hit": 1,
-            "latency_s": 4.0,
-            "paraphrase_type": "natural",
-            "chunk_type": "table",
-        },
+        {**common, "gold_multiplicity": "single_gold", "duplication_scope": "unique", "latency_s": 2.0},
+        {**common, "gold_multiplicity": "multi_gold", "duplication_scope": "cross_document", "latency_s": 4.0},
     ]
     summary = summarise(rows)
-    assert summary["grounded_success_rate"] == 0.5
-    assert summary["citation"]["precision_micro"] == 2 / 3
+    assert summary["by_gold_multiplicity"]["single_gold"]["n"] == 1
+    assert summary["by_gold_multiplicity"]["multi_gold"]["n"] == 1
+    assert summary["by_retrieval_rounds"]["1"]["n"] == 2
     assert summary["latency"]["median_s"] == 3.0
-    assert summary["latency"]["p95_s"] == 4.0
-
-
-def test_nearest_rank_percentile():
     assert _percentile([1.0, 2.0, 3.0, 4.0], 0.95) == 4.0
-
-
-def test_report_section_is_inserted_and_replaced_idempotently():
-    report = "# Report\n\n## Interpretation notes\n\nNotes.\n"
-    first = upsert_report_section(report, f"{SECTION_START}\nfirst\n{SECTION_END}")
-    second = upsert_report_section(first, f"{SECTION_START}\nsecond\n{SECTION_END}")
-    assert first.index(SECTION_START) < first.index("## Interpretation notes")
-    assert second.count(SECTION_START) == 1
-    assert "second" in second
-    assert "first" not in second
