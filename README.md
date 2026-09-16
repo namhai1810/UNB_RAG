@@ -1,6 +1,7 @@
 # multi-agent-cyber-rag
 
-A four-agent retrieval pipeline over authoritative cyber-security publications
+An English-language four-agent retrieval pipeline over authoritative
+cyber-security publications
 (NIST CSF 2.0, NIST SP 800-61r3, the CISA/FBI #StopRansomware Guide). Every
 answer is grounded in retrieved passages and carries citations down to the
 document, section, and page.
@@ -52,45 +53,38 @@ system exists to prevent.
 | 3. Verifier | Decide whether the evidence can ground an answer; name what is missing and what to search instead | yes |
 | 4. Answer | Write the answer from verified passages only, with inline `[n]` markers | yes |
 
-Agent 2 has no LLM call on purpose: query formulation already happened in triage
-(or in the verifier's rewrite), so generating again here would only add latency
-and a second place for the wording to drift.
+### Retrieval
 
-### Why hybrid retrieval
-
-Dense retrieval alone loses exact artifacts - `SP 800-61r3`, CVE identifiers,
-registry paths, tool names - which are precisely what a security question hinges
-on. BM25 alone loses paraphrase. Both branches live in one Qdrant collection and
-are fused with reciprocal rank fusion, then a cross-encoder reranks the survivors:
-fusion buys recall, the cross-encoder buys precision.
-
-### Adjacent-chunk context
-
-After multi-query fusion selects the reranked seed chunks, retrieval loads nearby
-chunks directly from Qdrant by their stable IDs. This adds surrounding context
-without another embedding search and keeps every neighbor's own page and section
-metadata available for citations. The default policy takes one chunk before and
-one after each seed, stays within the same document and section, removes
-duplicates, and caps the complete evidence set at 12 chunks.
-
-```dotenv
-NEIGHBOR_CHUNK_WINDOW=1
-NEIGHBOR_MAX_TOTAL_CHUNKS=12
-NEIGHBOR_SAME_SECTION_ONLY=true
-```
-
-Set `NEIGHBOR_CHUNK_WINDOW=0` to disable expansion. Set
-`NEIGHBOR_SAME_SECTION_ONLY=false` when context is allowed to cross section
-boundaries. `TOP_K_RERANK` still controls the number of relevance-ranked seed
-chunks; `NEIGHBOR_MAX_TOTAL_CHUNKS` controls seeds plus adjacent context.
+Retrieval combines BGE-M3 dense search with BM25 sparse search, fuses the
+rankings with reciprocal rank fusion, reranks the candidates, and adds adjacent
+chunks from the same document section for context. Retrieval is deterministic;
+query formulation happens in triage or verifier rewrites. Tune retrieval and
+neighbor expansion in `.env`.
 
 ---
+
+## System requirements
+
+- Python 3.11 (the version used for the verified test run) and `pip`; a Conda
+  environment is recommended.
+- Linux or another environment capable of running the Python CLI. The supplied
+  launch scripts use Bash.
+- Enough local disk space for the source PDFs, the Qdrant index, and downloaded
+  Docling, embedding, and reranker model weights. The first model load requires
+  network access unless those weights are already cached.
+- An LLM backend: either an OpenAI-compatible endpoint such as vLLM, or an
+  Anthropic API key. Running the documented local Qwen AWQ model requires a
+  CUDA-capable GPU with sufficient VRAM.
+- CUDA is optional for ingestion/retrieval: set `DEVICE=cpu` in `.env` for a
+  slower CPU-only run. The offline test suite itself needs no GPU, API key, or
+  network access.
 
 ## Setup
 
 ```bash
+conda create -n hainn_rag python=3.11 -y
 conda activate hainn_rag
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 cp .env.example .env          # then edit - see "LLM backend" below
 ```
 
@@ -101,62 +95,22 @@ python -m src.main ingest          # add --dump to also write chunks.jsonl
 python -m src.main status          # config + how many chunks are indexed
 ```
 
-Ingestion now follows this structure-preserving path:
-
-```text
-PDF -> Docling -> structured document -> loader
-                  |-> prose -> ContentBlock -> semantic paragraph chunks --|
-                  |-> table -> StructuredTableBlock                         |
-                              (caption, headers, rows/cells, page, section)  |
-                              -> header:value row chunks --------------------|-> Qdrant
-```
-
-Every ingest always saves Docling's full Markdown export under
-`data/processed/markdown/<pdf-name>.md` for visual inspection. Markdown is the audit representation, not the retrieval
-representation. Each structured table row is serialized as `header: value`
-pairs with section, caption, and row identity. Oversized cells are split while
-the row identifier is repeated. Qdrant also retains `chunk_index`,
-`table_headers`, the original `table_rows`, row range, `chunk_type`, section, and
-Docling page provenance. The stable per-document `chunk_index` is used to load
-adjacent context after reranking.
-
-Docling uses TableFormer `accurate` mode by default. Set `DOCLING_TABLE_MODE=fast`
-when throughput matters more than table fidelity, or `DOCLING_DO_OCR=true` for
-scanned/image-only PDFs. The first run downloads Docling and embedding models to
-the local Hugging Face cache.
+Ingestion uses Docling to preserve prose, tables, sections, and page provenance.
+It writes the local Qdrant index under `data/processed/qdrant` and an auditable
+Markdown export under `data/processed/markdown`. The first run downloads the
+required parsing and retrieval models. OCR, table mode, chunking, and retrieval
+settings are documented in `.env.example`.
 
 ### LLM backend
 
-Both backends are implemented behind one interface (`src/llm/`); switch with
-`LLM_PROVIDER` in `.env`. Nothing else changes.
+Choose the backend with `LLM_PROVIDER` in `.env`.
 
-**Local, OpenAI-compatible (default)** - start a server, then point at it:
-
-```bash
-pip install -U vllm
-
-CUDA_VISIBLE_DEVICES=2 VLLM_USE_FLASHINFER_SAMPLER=0 \
-vllm serve QuixiAI/Qwen3-30B-A3B-AWQ \
-  --host 0.0.0.0 \
-  --port 8000 \
-  --tensor-parallel-size 1 \
-  --quantization awq \
-  --dtype half \
-  --max-model-len 16384 \
-  --enforce-eager
-```
-
-This starts the 4-bit AWQ build of Qwen3-30B-A3B instead of loading the full
-BF16 checkpoint. The command uses GPU 2 and reserves 30% of its VRAM for the
-embedding and reranker models. Change `CUDA_VISIBLE_DEVICES=2` if another GPU
-should be used. FlashInfer sampling is disabled because FlashInfer 0.6.18 is
-incompatible with the CUDA 12.0 toolchain on this host. Wait until vLLM prints
-`Application startup complete`, then verify it with
-`curl http://127.0.0.1:8000/v1/models`.
-
-In a second terminal, with the same conda environment active, run:
+For the documented local OpenAI-compatible setup:
 
 ```bash
+python -m pip install -U vllm
+MODEL_ID=QuixiAI/Qwen3-30B-A3B-AWQ ./scripts/start_vllm.sh
+# In a second terminal:
 ./scripts/start_web.sh
 ```
 
@@ -166,22 +120,17 @@ OPENAI_BASE_URL=http://localhost:8000/v1
 OPENAI_MODEL=QuixiAI/Qwen3-30B-A3B-AWQ
 ```
 
-Structured output is negotiated automatically: `response_format=json_schema`
-first, then vLLM's `guided_json`, then schema-in-prompt with JSON extraction.
-Whichever tier the server accepts is cached for the process.
+Use `GPU_ID`, `PORT`, `MODEL_ID`, `MAX_MODEL_LEN`, and
+`GPU_MEMORY_UTILIZATION` to override the local server defaults. Verify the
+endpoint with `curl http://127.0.0.1:8000/v1/models`.
 
-**Claude API:**
+For Anthropic:
 
 ```dotenv
 LLM_PROVIDER=anthropic
 ANTHROPIC_API_KEY=sk-ant-...
 ANTHROPIC_MODEL=claude-opus-5
 ```
-
-Uses native structured outputs (`client.messages.parse`). `ANTHROPIC_FALLBACKS=true`
-retries on a `refusal` stop reason with a sibling model - worth keeping on, because
-legitimate defensive questions about ransomware occasionally trip a safety
-classifier, and a refused triage call would otherwise stall the graph.
 
 ---
 
@@ -194,24 +143,36 @@ python -m src.main chat                  # interactive
 python -m src.main -v ask "..."          # detailed pipeline + LLM logs
 ```
 
-Every request receives a correlation ID and logs pipeline start/end, state
-input/output for each graph node, routing decisions, retrieval candidates,
-question rewrites, LLM prompt/output, token usage, latency, and provider
-fallbacks. File logging is always INFO-level; `-v` also displays it in the
-terminal. Long values are truncated to `LOG_MAX_CHARS` (default `4000`). Set
-`LOG_PAYLOADS=false` when questions or model responses may contain sensitive
-data; metadata, timings, state transitions, and counts remain logged.
-
-Logs are also persisted to `logs/cyber-rag.log`, rotated at 10 MiB with five
-backups by default. Configure this with `LOG_FILE`, `LOG_MAX_BYTES`, and
-`LOG_BACKUP_COUNT`.
-
-Output is the answer, a citation table (`source / section / pages`), a confidence
-level, and any caveats.
+Commands return an answer, source/section/page citations, confidence, and caveats.
+Logs are written to `logs/cyber-rag.log`; use `-v` for console diagnostics and
+set `LOG_PAYLOADS=false` when prompts or responses may contain sensitive data.
 
 ---
 
 ## Evaluation
+
+### Test queries and system outputs
+
+> [!IMPORTANT]
+> **The complete question-output pairs are in
+> [`evaluation/end_to_end_results.json`](evaluation/end_to_end_results.json).**
+> Every object in `results[]` contains both fields:
+>
+> - **`query`**: the original English test question.
+> - **`response`**: the final answer produced by the complete RAG pipeline.
+>
+> Because both fields are in the same object, no cross-file join is needed to
+> read a question and its corresponding system output. Use `id` to trace that
+> record back to the benchmark and retrieval results.
+
+Each end-to-end record also includes `status`, citations, confidence, latency,
+and evaluation measurements. Related artifacts:
+
+| Artifact | Purpose |
+|---|---|
+| [`generated_retrieval_test_cases.json`](test_case_generation/generated_retrieval_test_cases.json) | The 100 benchmark queries and audited retrieval/citation labels. |
+| [`retrieval_results.json`](evaluation/retrieval_results.json) | Ranked chunks and retrieval metrics for every query. |
+| [`retrieval_evaluation.md`](evaluation/retrieval_evaluation.md) | Human-readable aggregate retrieval and end-to-end report. |
 
 ```bash
 python -m test_case_generation.generate_retrieval  # rebuild the 100-case benchmark
@@ -220,76 +181,17 @@ python -m evaluation.evaluate_end_to_end            # full four-agent flow
 python -m evaluation.evaluate_end_to_end --resume   # resume an interrupted full run
 ```
 
-The schema-2 benchmark contains 100 questions in 34 paraphrase groups, balanced
-between two retrieval conditions:
+The schema-2 benchmark contains 100 English questions from 34 atomic facts:
+50 have one fully supporting chunk and 50 have multiple acceptable gold chunks.
+See [`test_case_generation/README.md`](test_case_generation/README.md) for the
+construction and audit method.
 
-- `single_gold`: the atomic answer is supported by exactly one chunk in the
-  corpus. This isolates ordinary exact retrieval.
-- `multi_gold`: equivalent answer evidence occurs in two or more chunks, within
-  one document, across documents, or both. Every fully supporting chunk is an
-  acceptable gold; partially supporting chunks are tracked separately.
-
-The generator first proposes atomic facts from source chunks, then audits every
-corpus chunk with exact-span checks, lexical/semantic candidate discovery, and
-an evidence validator. A primary chunk records provenance only; it receives no
-special credit during scoring. See
-[`test_case_generation/README.md`](test_case_generation/README.md)
-for the reproducible construction procedure, schema, distributions, validation
-rules, and limitations.
-
-Retrieval is reported with Any-Gold Hit@K, full-gold Coverage/Recall@K, first-full-
-gold MRR, and graded nDCG (full gold = 2, partial support = 1). Metrics are split
-by `single_gold`/`multi_gold` and by duplicate scope so Hit@K cannot hide missed
-equivalent chunks. The end-to-end run executes triage, multi-query hybrid
-retrieval, neighbor expansion, verifier/rewrite retries, and answer generation;
-it reports answer outcomes, latency, retrieval metrics, and citation correctness.
-Citation correctness accepts a citation to any fully supporting gold chunk, not
-only the chunk from which the question was originally generated.
-
-The maintained Markdown artifacts are:
-
-- [`evaluation/retrieval_evaluation.md`](evaluation/retrieval_evaluation.md):
-  retrieval and end-to-end results.
-- [`test_case_generation/README.md`](test_case_generation/README.md):
-  how the test dataset was constructed and audited.
-
-The baseline matrix is defined in
-[`evaluation/baselines.json`](evaluation/baselines.json). It compares
-Qwen2.5-7B-Instruct, Qwen3-8B, Qwen3-14B, and the current
-Qwen3-30B-A3B-AWQ while holding retrieval fixed. A second axis compares the
-current BGE-M3 pair with Qwen3-Embedding-0.6B + Qwen3-Reranker-0.6B on the same
-pre-chunked corpus. Run and refresh it with:
-
-```bash
-python -m evaluation.run_baselines list
-python -m evaluation.run_baselines index --retrieval qwen3_0_6b
-python -m evaluation.run_baselines retrieval --retrieval qwen3_0_6b
-python -m evaluation.run_baselines report
-```
-
-Results are collected in the separate
+Detailed results are in
+[`evaluation/retrieval_evaluation.md`](evaluation/retrieval_evaluation.md), and
+model/retriever comparisons are in
 [`evaluation/model_baseline_comparison.md`](evaluation/model_baseline_comparison.md).
-All benchmark launchers hard-cap OMP, MKL, OpenBLAS, NumExpr, vecLib, and Rayon
-to six CPU threads.
-Unexecuted configurations stay marked as `planned`; the report never fills
-missing measurements with estimates.
-
-The older 20-query harness remains available as `python -m evaluation.evaluate`
-for routing and abstention regressions, but it is not the retrieval benchmark.
-
-### Verified after the Docling migration
-
-| What | Result |
-|---|---|
-| Real corpus conversion | 3 Markdown files; 34 tables; 167 prose + 196 table-row chunks |
-| Temporary Qdrant payload smoke test | text plus structured table metadata persisted |
-| Schema-2 retrieval benchmark | 100 questions; 50 single-gold + 50 multi-gold; 34 fact groups |
-| Offline unit + integration tests | 91 passed |
-
-The committed benchmark and reports are tied to the recorded corpus fingerprint
-and chunk IDs. Rebuild both after changing the parser, corpus, or chunk boundaries.
-Retrieval evaluation needs the local index and embedding/reranker models;
-end-to-end evaluation additionally needs the configured LLM backend.
+Regenerate results after changing the parser, corpus, chunk boundaries, model,
+or retrieval configuration.
 
 ---
 
@@ -299,15 +201,10 @@ end-to-end evaluation additionally needs the configured LLM backend.
 pytest tests/ -q
 ```
 
-No GPU, API key, or network required: the LLM and PDF conversion are faked where
-needed, and chunking uses a word tokenizer. The suite covers Docling block
-extraction, persisted Markdown, structured headers/rows/cells, `header: value`
-row chunks, oversized-cell splitting, chunk budgets, rank fusion, adjacent-chunk
-boundaries/deduplication, citation integrity, and every path through
-the graph (rejection, clarification, the rewrite-retry loop, budget exhaustion,
-and refusal to answer). It also checks schema-2 dataset multiplicity, any-gold
-retrieval scoring, full-gold coverage, graded nDCG, and any-full-gold citation
-correctness.
+The test suite is offline: it mocks LLM and PDF-conversion dependencies, so it
+requires no GPU, API key, or network connection. It covers ingestion, retrieval,
+citations, evaluation scoring, provider behavior, the web API, and all workflow
+routes.
 
 ---
 
@@ -338,40 +235,14 @@ tests/                   offline test suite
 
 ---
 
-## Design notes
-
-**Document structure survives extraction.** The loader walks Docling's reading-order
-document tree instead of flattening each PDF page. Section headers update the
-active section, tables are exported as Markdown `TableItem`s, and every block
-retains its Docling page provenance. Repeated page chrome is filtered only from
-retrieval blocks; the saved Markdown remains the complete Docling export so it
-can be audited directly.
-
-**Citations are validated, not trusted.** The answer agent reports which passages
-it used, but only the `[n]` markers actually present in the answer text are
-turned into citations, and any marker outside the evidence range is stripped from
-the text and recorded in `dropped_markers`. An answer with no resolvable marker is
-downgraded to low confidence.
-
-**The retry loop cannot spin.** The verifier must supply new queries for a retry
-to happen; chunks it has already dismissed are excluded from the next round; the
-budget is `MAX_RETRIEVAL_ROUNDS`; and when it runs out the answer agent still
-answers from what was found, flagged `answered_partial` with an explicit caveat.
-
-**Failures surface at the edge.** `ask` and `chat` preflight the index and the LLM
-endpoint (`models.list` / `models.retrieve` - never a billed generation) and print
-what to fix. Connection, auth and rate-limit errors are never treated as "this
-constraint style is unsupported", so a server that is simply down fails once
-instead of being probed three times.
-
-**Qdrant runs in local mode**, storing to `data/processed/qdrant` with no server.
-This takes a single-writer file lock, so one pipeline at a time - move to a
-Qdrant server if you need concurrent readers.
-
 ## Known limits
 
-- The corpus is English-only; BGE-M3 is multilingual, so Vietnamese queries will
-  retrieve, but the answer agent is prompted in English and the sources are English.
+- Qdrant runs in local mode under `data/processed/qdrant` and permits one writer
+  at a time. Use a Qdrant server for concurrent workloads.
+- The supported scope is English: the corpus, benchmark queries, reference
+  answers, prompts, and reported system outputs are English. Non-English queries
+  and answers have not been evaluated and should be treated as unsupported, even
+  though the embedding model itself is multilingual.
 - Docling can represent a table spanning a page boundary as multiple consecutive
   tables. They remain separate table chunks with correct page citations.
 - The schema-2 audit uses deterministic evidence checks plus an LLM support

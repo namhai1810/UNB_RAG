@@ -7,5 +7,7 @@ evaluation/results.csv
 logs/
 *.json
 !evaluation/baselines.json
+!evaluation/retrieval_results.json
+!evaluation/end_to_end_results.json
 !test_case_generation/generated_retrieval_test_cases.json
 *.orig

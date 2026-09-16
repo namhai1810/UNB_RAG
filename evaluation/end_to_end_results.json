@@ -1,0 +1,4249 @@
+{
+  "created_at": "2026-09-13T11:33:08.474149+00:00",
+  "config": {
+    "case_count": 100,
+    "corpus_sha256": "3033ace0581cc7581c762063fb7a4854aead91ae1b9992a5baf386a29d489f58",
+    "dataset_schema_version": "2.0",
+    "llm_provider": "openai",
+    "llm_model": "QuixiAI/Qwen3-30B-A3B-AWQ",
+    "embedding_model": "BAAI/bge-m3",
+    "reranker_model": "BAAI/bge-reranker-v2-m3",
+    "device": "cuda",
+    "max_retrieval_rounds": 3
+  },
+  "summary": {
+    "case_count": 100,
+    "statuses": {
+      "answered": 72,
+      "answered_partial": 27,
+      "insufficient": 1
+    },
+    "triage_in_scope_rate": 1,
+    "answer_produced_rate": 0.99,
+    "fully_answered_rate": 0.72,
+    "grounded_success_rate": 0.69,
+    "mean_rounds": 1.77,
+    "citation": {
+      "total": 232,
+      "correct": 111,
+      "precision_micro": 0.47844827586206895,
+      "precision_macro_cited": 0.6364117364117364,
+      "hit_rate": 0.96,
+      "primary_hit_rate": 0.87,
+      "integrity_rate": 0.98989898989899,
+      "uncited_answer_rate": 0
+    },
+    "latency": {
+      "mean_s": 16.49292,
+      "median_s": 12.878499999999999,
+      "p95_s": 26.859,
+      "max_s": 119.555,
+      "mean_excluding_first_s": 16.317666666666668
+    },
+    "errors": 0,
+    "by_gold_multiplicity": {
+      "multi_gold": {
+        "n": 50,
+        "fully_answered_rate": 0.76,
+        "grounded_success_rate": 0.74,
+        "citation_hit_rate": 0.98,
+        "citation_precision_micro": 0.5470085470085471,
+        "citation_precision_macro": 0.6997619047619048,
+        "mean_rounds": 1.7,
+        "mean_latency_s": 16.82668
+      },
+      "single_gold": {
+        "n": 50,
+        "fully_answered_rate": 0.68,
+        "grounded_success_rate": 0.64,
+        "citation_hit_rate": 0.94,
+        "citation_precision_micro": 0.40869565217391307,
+        "citation_precision_macro": 0.5717687074829932,
+        "mean_rounds": 1.84,
+        "mean_latency_s": 16.15916
+      }
+    },
+    "by_duplication_scope": {
+      "cross_document": {
+        "n": 14,
+        "fully_answered_rate": 0.9285714285714286,
+        "grounded_success_rate": 0.8571428571428571,
+        "citation_hit_rate": 0.9285714285714286,
+        "citation_precision_micro": 0.48148148148148145,
+        "citation_precision_macro": 0.680952380952381,
+        "mean_rounds": 1.4285714285714286,
+        "mean_latency_s": 12.349428571428572
+      },
+      "mixed": {
+        "n": 15,
+        "fully_answered_rate": 0.8666666666666667,
+        "grounded_success_rate": 0.8666666666666667,
+        "citation_hit_rate": 1,
+        "citation_precision_micro": 0.5714285714285714,
+        "citation_precision_macro": 0.7088888888888889,
+        "mean_rounds": 1.6,
+        "mean_latency_s": 14.498933333333333
+      },
+      "same_document": {
+        "n": 21,
+        "fully_answered_rate": 0.5714285714285714,
+        "grounded_success_rate": 0.5714285714285714,
+        "citation_hit_rate": 1,
+        "citation_precision_micro": 0.5625,
+        "citation_precision_macro": 0.70578231292517,
+        "mean_rounds": 1.9523809523809523,
+        "mean_latency_s": 21.474190476190476
+      },
+      "unique": {
+        "n": 50,
+        "fully_answered_rate": 0.68,
+        "grounded_success_rate": 0.64,
+        "citation_hit_rate": 0.94,
+        "citation_precision_micro": 0.40869565217391307,
+        "citation_precision_macro": 0.5717687074829932,
+        "mean_rounds": 1.84,
+        "mean_latency_s": 16.15916
+      }
+    },
+    "by_retrieval_rounds": {
+      "1": {
+        "n": 54,
+        "fully_answered_rate": 1,
+        "grounded_success_rate": 0.9814814814814815,
+        "citation_hit_rate": 0.9814814814814815,
+        "citation_precision_micro": 0.5041322314049587,
+        "citation_precision_macro": 0.657716049382716,
+        "mean_rounds": 1,
+        "mean_latency_s": 11.054277777777777
+      },
+      "2": {
+        "n": 15,
+        "fully_answered_rate": 1,
+        "grounded_success_rate": 1,
+        "citation_hit_rate": 1,
+        "citation_precision_micro": 0.47368421052631576,
+        "citation_precision_macro": 0.6422222222222222,
+        "mean_rounds": 2,
+        "mean_latency_s": 15.909066666666666
+      },
+      "3": {
+        "n": 31,
+        "fully_answered_rate": 0.0967741935483871,
+        "grounded_success_rate": 0.03225806451612903,
+        "citation_hit_rate": 0.9032258064516129,
+        "citation_precision_micro": 0.4383561643835616,
+        "citation_precision_macro": 0.5951587301587301,
+        "mean_rounds": 3,
+        "mean_latency_s": 26.249193548387098
+      }
+    },
+    "by_paraphrase_type": {
+      "lexical": {
+        "n": 32,
+        "fully_answered_rate": 0.71875,
+        "grounded_success_rate": 0.6875,
+        "citation_hit_rate": 0.96875,
+        "citation_precision_micro": 0.5571428571428572,
+        "citation_precision_macro": 0.6944196428571429,
+        "mean_rounds": 1.78125,
+        "mean_latency_s": 18.91246875
+      },
+      "natural": {
+        "n": 34,
+        "fully_answered_rate": 0.7647058823529411,
+        "grounded_success_rate": 0.7647058823529411,
+        "citation_hit_rate": 1,
+        "citation_precision_micro": 0.42528735632183906,
+        "citation_precision_macro": 0.5892156862745098,
+        "mean_rounds": 1.6176470588235294,
+        "mean_latency_s": 14.332852941176471
+      },
+      "semantic": {
+        "n": 34,
+        "fully_answered_rate": 0.6764705882352942,
+        "grounded_success_rate": 0.6176470588235294,
+        "citation_hit_rate": 0.9117647058823529,
+        "citation_precision_micro": 0.4666666666666667,
+        "citation_precision_macro": 0.6287878787878788,
+        "mean_rounds": 1.911764705882353,
+        "mean_latency_s": 16.375764705882354
+      }
+    },
+    "by_source": {
+      "NIST.CSWP.29.pdf": {
+        "n": 33,
+        "fully_answered_rate": 0.696969696969697,
+        "grounded_success_rate": 0.696969696969697,
+        "citation_hit_rate": 1,
+        "citation_precision_micro": 0.524390243902439,
+        "citation_precision_macro": 0.6673160173160173,
+        "mean_rounds": 1.7272727272727273,
+        "mean_latency_s": 16.19630303030303
+      },
+      "NIST.SP.800-61r3.pdf": {
+        "n": 43,
+        "fully_answered_rate": 0.7441860465116279,
+        "grounded_success_rate": 0.6744186046511628,
+        "citation_hit_rate": 0.9302325581395349,
+        "citation_precision_micro": 0.4329896907216495,
+        "citation_precision_macro": 0.610077519379845,
+        "mean_rounds": 1.8604651162790697,
+        "mean_latency_s": 15.821720930232559
+      },
+      "StopRansomware-Guide 508.pdf": {
+        "n": 24,
+        "fully_answered_rate": 0.7083333333333334,
+        "grounded_success_rate": 0.7083333333333334,
+        "citation_hit_rate": 0.9583333333333334,
+        "citation_precision_micro": 0.49056603773584906,
+        "citation_precision_macro": 0.6413043478260869,
+        "mean_rounds": 1.6666666666666667,
+        "mean_latency_s": 18.103333333333335
+      }
+    },
+    "by_chunk_type": {
+      "paragraph": {
+        "n": 65,
+        "fully_answered_rate": 0.6923076923076923,
+        "grounded_success_rate": 0.6615384615384615,
+        "citation_hit_rate": 0.9538461538461539,
+        "citation_precision_micro": 0.4551282051282051,
+        "citation_precision_macro": 0.6099702380952381,
+        "mean_rounds": 1.7384615384615385,
+        "mean_latency_s": 17.284123076923077
+      },
+      "table": {
+        "n": 35,
+        "fully_answered_rate": 0.7714285714285715,
+        "grounded_success_rate": 0.7428571428571429,
+        "citation_hit_rate": 0.9714285714285714,
+        "citation_precision_micro": 0.5263157894736842,
+        "citation_precision_macro": 0.6847619047619048,
+        "mean_rounds": 1.8285714285714285,
+        "mean_latency_s": 15.023542857142857
+      }
+    }
+  },
+  "results": [
+    {
+      "id": "ret_001",
+      "group_id": "single_gold_group_001",
+      "query": "What is used to find potentially adverse events?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "lexical",
+      "source": "NIST.CSWP.29.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Continuous Monitoring (DE.CM) is used to find potentially adverse events.",
+      "primary_gold_chunk_id": "17684aea55c3-00054",
+      "acceptable_gold_chunk_ids": [
+        "17684aea55c3-00054"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 3,
+      "correct_citation_count": 1,
+      "citation_precision": 0.3333333333333333,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00143",
+        "17684aea55c3-00054",
+        "6ca34d2a8b1c-00142"
+      ],
+      "correct_cited_chunk_ids": [
+        "17684aea55c3-00054"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 33.843,
+      "error": "",
+      "response": "The NIST Cybersecurity Framework (CSF) uses continuous monitoring and analysis to find potentially adverse events [1]. Specifically, continuous monitoring (DE.CM) involves monitoring networks, physical environments, personnel activity, and external service providers to detect anomalies, indicators of compromise, and other adverse events [2]. Tools like security information and event management (SIEM) and security orchestration, automation, and response (SOAR) are used to monitor log events for malicious activity and generate reports [1]. Cyber threat intelligence (CTI) is integrated into the analysis to improve detection accuracy and characterize threat actors [1]. Adverse event analysis (DE.AE) includes correlating information from multiple sources and analyzing events to detect cybersecurity incidents [3]."
+    },
+    {
+      "id": "ret_002",
+      "group_id": "single_gold_group_001",
+      "query": "How are anomalies, indicators of compromise, and other adverse events detected?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "semantic",
+      "source": "NIST.CSWP.29.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Continuous Monitoring (DE.CM) is used to find potentially adverse events.",
+      "primary_gold_chunk_id": "17684aea55c3-00054",
+      "acceptable_gold_chunk_ids": [
+        "17684aea55c3-00054"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 5,
+      "correct_citation_count": 1,
+      "citation_precision": 0.2,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00142",
+        "17684aea55c3-00054",
+        "6ca34d2a8b1c-00136",
+        "6ca34d2a8b1c-00143",
+        "6ca34d2a8b1c-00144"
+      ],
+      "correct_cited_chunk_ids": [
+        "17684aea55c3-00054"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 12.276,
+      "error": "",
+      "response": "Anomalies, indicators of compromise, and other adverse events are detected through continuous monitoring of networks, network services, physical environments, personnel activity, external service providers, and computing hardware and software [2]. This includes monitoring for unauthorized activity, deviations from expected behavior, and changes in security posture [3]. Technical solutions are used to filter large datasets to a subset suitable for human analysis [1]. Cyber threat intelligence (CTI) is integrated into the analysis to improve detection accuracy and characterize threat actors [4]. Event correlation tools like SIEM and SOAR are utilized to gather related data from multiple sources [8]. Incidents are declared when adverse events meet defined criteria [2]."
+    },
+    {
+      "id": "ret_003",
+      "group_id": "single_gold_group_001",
+      "query": "What method is used for monitoring assets to detect adverse events?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "natural",
+      "source": "NIST.CSWP.29.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Continuous Monitoring (DE.CM) is used to find potentially adverse events.",
+      "primary_gold_chunk_id": "17684aea55c3-00054",
+      "acceptable_gold_chunk_ids": [
+        "17684aea55c3-00054"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 4,
+      "correct_citation_count": 1,
+      "citation_precision": 0.25,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "17684aea55c3-00054",
+        "6ca34d2a8b1c-00136",
+        "6ca34d2a8b1c-00141",
+        "6ca34d2a8b1c-00143"
+      ],
+      "correct_cited_chunk_ids": [
+        "17684aea55c3-00054"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 11.332,
+      "error": "",
+      "response": "The method used for monitoring assets to detect adverse events is Continuous Monitoring [1], which includes monitoring networks and network services [2], computing hardware and software, runtime environments, and their data [3], as well as personnel activity and technology usage [1]. Additionally, external service provider activities and services are monitored [1], and tools such as Security Information and Event Management (SIEM) and Security Orchestration, Automation, and Response (SOAR) are used for continuous monitoring of log events [4]."
+    },
+    {
+      "id": "ret_004",
+      "group_id": "single_gold_group_002",
+      "query": "How are cybersecurity risk management practices formalized?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "lexical",
+      "source": "NIST.CSWP.29.pdf",
+      "chunk_type": "table",
+      "reference_answer": "Cybersecurity risk management practices are formally approved and expressed as policy.",
+      "primary_gold_chunk_id": "17684aea55c3-00060",
+      "acceptable_gold_chunk_ids": [
+        "17684aea55c3-00060"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 2,
+      "correct_citation_count": 1,
+      "citation_precision": 0.5,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "17684aea55c3-00060",
+        "17684aea55c3-00022"
+      ],
+      "correct_cited_chunk_ids": [
+        "17684aea55c3-00060"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "medium",
+      "latency_s": 13.58,
+      "error": "",
+      "response": "Cybersecurity risk management practices are formalized through the establishment of organization-wide approaches that include risk-informed policies, processes, and procedures. These practices are aligned with the NIST Cybersecurity Framework (CSF), which provides a structured approach to managing cybersecurity risks. Specifically, the CSF's Tier 3 (Repeatable) and Tier 4 (Adaptive) levels describe how organizations can formalize their risk management strategies, ensuring that risk management is integrated into enterprise risk management (ERM) processes and that there are clear roles, responsibilities, and authorities for cybersecurity risk management [1]. Additionally, the CSF emphasizes the importance of formal policies, continuous improvement, and the integration of cybersecurity risk management with other risk management programs, such as supply chain risk management and privacy risk management [3]."
+    },
+    {
+      "id": "ret_005",
+      "group_id": "single_gold_group_002",
+      "query": "What is required for risk management practices to be considered official?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "semantic",
+      "source": "NIST.CSWP.29.pdf",
+      "chunk_type": "table",
+      "reference_answer": "Cybersecurity risk management practices are formally approved and expressed as policy.",
+      "primary_gold_chunk_id": "17684aea55c3-00060",
+      "acceptable_gold_chunk_ids": [
+        "17684aea55c3-00060"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered_partial",
+      "rounds": 3,
+      "fully_answered": 0,
+      "answer_produced": 1,
+      "grounded_success": 0,
+      "citation_count": 1,
+      "correct_citation_count": 1,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "17684aea55c3-00060"
+      ],
+      "correct_cited_chunk_ids": [
+        "17684aea55c3-00060"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 22.829,
+      "error": "",
+      "response": "For risk management practices to be considered official, they must be formally approved and expressed as policy [1]."
+    },
+    {
+      "id": "ret_006",
+      "group_id": "single_gold_group_002",
+      "query": "What must be done to make risk management practices official?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "natural",
+      "source": "NIST.CSWP.29.pdf",
+      "chunk_type": "table",
+      "reference_answer": "Cybersecurity risk management practices are formally approved and expressed as policy.",
+      "primary_gold_chunk_id": "17684aea55c3-00060",
+      "acceptable_gold_chunk_ids": [
+        "17684aea55c3-00060"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered_partial",
+      "rounds": 3,
+      "fully_answered": 0,
+      "answer_produced": 1,
+      "grounded_success": 0,
+      "citation_count": 1,
+      "correct_citation_count": 1,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "17684aea55c3-00060"
+      ],
+      "correct_cited_chunk_ids": [
+        "17684aea55c3-00060"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 21.008,
+      "error": "",
+      "response": "To make risk management practices official, the organization's risk management practices must be formally approved and expressed as policy [3]."
+    },
+    {
+      "id": "ret_007",
+      "group_id": "single_gold_group_003",
+      "query": "What is a recommended practice for detecting malware through network traffic?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "lexical",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "table",
+      "reference_answer": "Monitor email, web, file sharing, and other common attack vectors to detect malware and phishing.",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00141",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00141"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 3,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 0,
+      "citation_count": 2,
+      "correct_citation_count": 0,
+      "citation_precision": 0.0,
+      "citation_hit": 0,
+      "primary_citation_hit": 0,
+      "cited_chunk_ids": [
+        "e5c72935263d-00019",
+        "17684aea55c3-00054"
+      ],
+      "correct_cited_chunk_ids": [],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 19.206,
+      "error": "",
+      "response": "A recommended practice for detecting malware through network traffic is to implement an intrusion detection system (IDS) to detect command and control activity and other potentially malicious network activity [1]. Additionally, continuous monitoring of networks and network services is essential to identify anomalies and indicators of compromise [3]."
+    },
+    {
+      "id": "ret_008",
+      "group_id": "single_gold_group_003",
+      "query": "How should organizations monitor for phishing attempts and malware?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "semantic",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "table",
+      "reference_answer": "Monitor email, web, file sharing, and other common attack vectors to detect malware and phishing.",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00141",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00141"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 2,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 4,
+      "correct_citation_count": 1,
+      "citation_precision": 0.25,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "e5c72935263d-00017",
+        "6ca34d2a8b1c-00141",
+        "e5c72935263d-00019",
+        "e5c72935263d-00018"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00141"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 16.281,
+      "error": "",
+      "response": "Organizations should monitor for phishing attempts and malware by implementing a cybersecurity user awareness and training program that includes guidance on identifying and reporting suspicious activity [1], using email gateway filters to block malicious emails and IP addresses [1], enabling DMARC policy and verification to prevent spoofed emails [1], and utilizing the Malicious Domain Blocking and Reporting (MDBR) service to block harmful domains [1]. Additionally, monitoring email, web, and other attack vectors for malware and phishing is recommended [2], along with using automatic updates for antivirus software and application allowlisting to block unauthorized software [3]. Disabling macros in Office files and Windows Script Host can also prevent malware delivery [4]."
+    },
+    {
+      "id": "ret_009",
+      "group_id": "single_gold_group_003",
+      "query": "What should be monitored to detect potential security threats?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "natural",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "table",
+      "reference_answer": "Monitor email, web, file sharing, and other common attack vectors to detect malware and phishing.",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00141",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00141"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 5,
+      "correct_citation_count": 1,
+      "citation_precision": 0.2,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "17684aea55c3-00054",
+        "6ca34d2a8b1c-00141",
+        "e5c72935263d-00019",
+        "6ca34d2a8b1c-00140",
+        "6ca34d2a8b1c-00138"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00141"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 12.058,
+      "error": "",
+      "response": "To detect potential security threats, the following should be monitored: networks and network services [1], the physical environment [7], personnel activity and technology usage [1], external service provider activities and services [6], computing hardware and software, runtime environments, and their data [1], email, web, file sharing, collaboration services, and other common attack vectors [3], authentication attempts [3], software and hardware configurations for deviations from security baselines [3], hardware and software, including cybersecurity protection mechanisms, for signs of tampering, failure, or compromise [3], endpoints for cyber health issues [3], command and control activity and other potentially malicious network activity [4], and indicators of activity with the Windows Sysmon utility [4]."
+    },
+    {
+      "id": "ret_010",
+      "group_id": "single_gold_group_004",
+      "query": "What are potential vectors for ransomware attacks?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "lexical",
+      "source": "StopRansomware-Guide 508.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Third parties and managed service providers (MSPs) are potential vectors for ransomware attacks.",
+      "primary_gold_chunk_id": "e5c72935263d-00023",
+      "acceptable_gold_chunk_ids": [
+        "e5c72935263d-00023"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 2,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 3,
+      "correct_citation_count": 1,
+      "citation_precision": 0.3333333333333333,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "e5c72935263d-00011",
+        "e5c72935263d-00023",
+        "e5c72935263d-00019"
+      ],
+      "correct_cited_chunk_ids": [
+        "e5c72935263d-00023"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 15.855,
+      "error": "",
+      "response": "Potential vectors for ransomware attacks include internet-facing vulnerabilities and misconfigurations [1], third parties and managed service providers (MSPs) [2], and precursor malware infections [3]. Specifically, ransomware actors may exploit exposed services like Remote Desktop Protocol, unpatched vulnerabilities, and misconfigured devices [1]. They may also target MSPs or third parties with trusted relationships to access client networks [2]. Additionally, precursor malware infections such as QakBot, Bumblebee, and Emotet can lead to ransomware deployment [3]."
+    },
+    {
+      "id": "ret_011",
+      "group_id": "single_gold_group_004",
+      "query": "How can malicious actors exploit trusted relationships with third parties?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "semantic",
+      "source": "StopRansomware-Guide 508.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Third parties and managed service providers (MSPs) are potential vectors for ransomware attacks.",
+      "primary_gold_chunk_id": "e5c72935263d-00023",
+      "acceptable_gold_chunk_ids": [
+        "e5c72935263d-00023"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 2,
+      "correct_citation_count": 1,
+      "citation_precision": 0.5,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "e5c72935263d-00023",
+        "e5c72935263d-00022"
+      ],
+      "correct_cited_chunk_ids": [
+        "e5c72935263d-00023"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 9.966,
+      "error": "",
+      "response": "Malicious actors can exploit trusted relationships with third parties by targeting managed service providers (MSPs) to compromise client organizations, using MSP network connections and access to propagate malware [1]. They may also spoof the identity of or use compromised email accounts of trusted entities to phish users, leading to network compromise [1]. Additionally, advanced social engineering tactics like impersonating employees to obtain credentials are employed [2]."
+    },
+    {
+      "id": "ret_012",
+      "group_id": "single_gold_group_004",
+      "query": "What is a common method for ransomware to enter an organization?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "natural",
+      "source": "StopRansomware-Guide 508.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Third parties and managed service providers (MSPs) are potential vectors for ransomware attacks.",
+      "primary_gold_chunk_id": "e5c72935263d-00023",
+      "acceptable_gold_chunk_ids": [
+        "e5c72935263d-00023"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 2,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 3,
+      "correct_citation_count": 1,
+      "citation_precision": 0.3333333333333333,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "e5c72935263d-00011",
+        "e5c72935263d-00007",
+        "e5c72935263d-00023"
+      ],
+      "correct_cited_chunk_ids": [
+        "e5c72935263d-00023"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 15.651,
+      "error": "",
+      "response": "A common method for ransomware to enter an organization is through internet-facing vulnerabilities and misconfigurations [1]. This includes exposing services like Remote Desktop Protocol (RDP) on the web without proper security measures, which threat actors can exploit to gain initial access [1]. Additionally, ransomware often enters via third parties or managed service providers (MSPs) who have access to the organization's systems, highlighting the importance of vetting and securing these relationships [3]. Compromised credentials and social engineering are also noted as common initial infection vectors [2]."
+    },
+    {
+      "id": "ret_013",
+      "group_id": "single_gold_group_005",
+      "query": "How is the CSF 2.0 Community Profile structured?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "lexical",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "The CSF 2.0 Community Profile for cyber incident risk management is divided into two tables: Table 2 covers Preparation (Govern, Identify, and Protect) and Lessons Learned (Identify-Improvement), while Table 3 covers Incident Response (Detect, Respond, and Recover).",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00040",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00040"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered_partial",
+      "rounds": 3,
+      "fully_answered": 0,
+      "answer_produced": 1,
+      "grounded_success": 0,
+      "citation_count": 1,
+      "correct_citation_count": 1,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00040"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00040"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 26.859,
+      "error": "",
+      "response": "The CSF 2.0 Community Profile is structured into two tables: Table 2 covers Preparation (Govern, Identify, and Protect) and Lessons Learned (Identify-Improvement), while Table 3 covers Incident Response (Detect, Respond, and Recover) [1]. Each CSF 2.0 Function, Category, and Subcategory has its own row in one of the two tables. The priority levels for each row are High, Medium, or Low, indicating their relevance to incident response [1]. The last column may contain recommendations, considerations, and notes, which are identified by an 'R', 'C', or 'N' designation [1]."
+    },
+    {
+      "id": "ret_014",
+      "group_id": "single_gold_group_005",
+      "query": "What are the two main sections of the CSF 2.0 Community Profile?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "semantic",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "The CSF 2.0 Community Profile for cyber incident risk management is divided into two tables: Table 2 covers Preparation (Govern, Identify, and Protect) and Lessons Learned (Identify-Improvement), while Table 3 covers Incident Response (Detect, Respond, and Recover).",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00040",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00040"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered_partial",
+      "rounds": 3,
+      "fully_answered": 0,
+      "answer_produced": 1,
+      "grounded_success": 0,
+      "citation_count": 1,
+      "correct_citation_count": 1,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00040"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00040"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 23.339,
+      "error": "",
+      "response": "The two main sections of the CSF 2.0 Community Profile are Table 2, which covers Preparation (Govern, Identify, and Protect) and Lessons Learned (Identify-Improvement), and Table 3, which covers Incident Response (Detect, Respond, and Recover) [1]."
+    },
+    {
+      "id": "ret_015",
+      "group_id": "single_gold_group_005",
+      "query": "What are the two tables in the CSF 2.0 Community Profile for cyber incident risk management?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "natural",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "The CSF 2.0 Community Profile for cyber incident risk management is divided into two tables: Table 2 covers Preparation (Govern, Identify, and Protect) and Lessons Learned (Identify-Improvement), while Table 3 covers Incident Response (Detect, Respond, and Recover).",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00040",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00040"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered_partial",
+      "rounds": 3,
+      "fully_answered": 0,
+      "answer_produced": 1,
+      "grounded_success": 0,
+      "citation_count": 1,
+      "correct_citation_count": 1,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00040"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00040"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 28.6,
+      "error": "",
+      "response": "The two tables in the CSF 2.0 Community Profile for cyber incident risk management are Table 2, which covers Preparation (Govern, Identify, and Protect) and Lessons Learned (Identify-Improvement), and Table 3, which covers Incident Response (Detect, Respond, and Recover) [1]."
+    },
+    {
+      "id": "ret_016",
+      "group_id": "single_gold_group_006",
+      "query": "What information do practitioners provide to managers and executives to understand the organization's cybersecurity posture?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "lexical",
+      "source": "NIST.CSWP.29.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Practitioners provide managers and executives with key performance indicators and key risk indicators to understand the organization's cybersecurity posture.",
+      "primary_gold_chunk_id": "17684aea55c3-00021",
+      "acceptable_gold_chunk_ids": [
+        "17684aea55c3-00021"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 1,
+      "correct_citation_count": 1,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "17684aea55c3-00021"
+      ],
+      "correct_cited_chunk_ids": [
+        "17684aea55c3-00021"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 11.639,
+      "error": "",
+      "response": "Practitioners provide managers and executives with key performance indicators and key risk indicators to understand the organization's cybersecurity posture [1]. Additionally, they share updates, insights, and concerns regarding cybersecurity activities, which help in making informed decisions and adjusting risk strategies [1]. The information includes results from risk registers, progress reports, and actions taken to close gaps between Current and Target Profiles [1]. Executives also receive data on cybersecurity risks combined with other organizational risks, enabling them to adjust strategies and priorities [1]. Furthermore, practitioners contribute to system-level plans and provide inputs for risk registers and progress reports as part of ongoing assessments [1]."
+    },
+    {
+      "id": "ret_017",
+      "group_id": "single_gold_group_006",
+      "query": "How do practitioners assist managers and executives in comprehending the organization's cybersecurity status?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "semantic",
+      "source": "NIST.CSWP.29.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Practitioners provide managers and executives with key performance indicators and key risk indicators to understand the organization's cybersecurity posture.",
+      "primary_gold_chunk_id": "17684aea55c3-00021",
+      "acceptable_gold_chunk_ids": [
+        "17684aea55c3-00021"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 2,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 3,
+      "correct_citation_count": 1,
+      "citation_precision": 0.3333333333333333,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "17684aea55c3-00021",
+        "17684aea55c3-00020",
+        "17684aea55c3-00009"
+      ],
+      "correct_cited_chunk_ids": [
+        "17684aea55c3-00021"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 15.313,
+      "error": "",
+      "response": "Practitioners assist managers and executives by providing key performance and risk indicators to understand the organization's cybersecurity posture [1]. They facilitate bidirectional communication between executives, managers, and practitioners, ensuring that risk data is integrated with other organizational risks and that cybersecurity objectives align with strategic priorities [2]. The CSF Core components are designed to be understandable for all levels, enabling a common language for risk communication [3]."
+    },
+    {
+      "id": "ret_018",
+      "group_id": "single_gold_group_006",
+      "query": "What do practitioners share with executives to help them make informed decisions about cybersecurity?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "natural",
+      "source": "NIST.CSWP.29.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Practitioners provide managers and executives with key performance indicators and key risk indicators to understand the organization's cybersecurity posture.",
+      "primary_gold_chunk_id": "17684aea55c3-00021",
+      "acceptable_gold_chunk_ids": [
+        "17684aea55c3-00021"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 3,
+      "correct_citation_count": 1,
+      "citation_precision": 0.3333333333333333,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "17684aea55c3-00021",
+        "17684aea55c3-00020",
+        "17684aea55c3-00060"
+      ],
+      "correct_cited_chunk_ids": [
+        "17684aea55c3-00021"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 11.832,
+      "error": "",
+      "response": "Practitioners share key performance indicators and key risk indicators with executives to help them understand the organization's cybersecurity posture and make informed decisions [1]. Additionally, practitioners provide updates, insights, and concerns to managers and executives, facilitating bidirectional communication to align cybersecurity efforts with organizational priorities [2]. Executives are informed about cybersecurity risks through regular communication with senior cybersecurity and non-cybersecurity leaders, ensuring cybersecurity considerations are integrated across all operations [3]. Furthermore, practitioners contribute to risk registers and progress reports, which are used by managers to adjust strategies and reduce potential harms [2]."
+    },
+    {
+      "id": "ret_019",
+      "group_id": "single_gold_group_007",
+      "query": "What is the benefit of maintaining network data flow representations?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "lexical",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "table",
+      "reference_answer": "Maintaining network data flow representations can improve the accuracy of detecting malicious data flows and communication.",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00085",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00085"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 2,
+      "correct_citation_count": 1,
+      "citation_precision": 0.5,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00085",
+        "e5c72935263d-00026"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00085"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 9.022,
+      "error": "",
+      "response": "Maintaining network data flow representations improves the accuracy of detecting malicious data flows and communication [1]. These representations help incident responders understand where to focus their efforts during an incident [2]."
+    },
+    {
+      "id": "ret_020",
+      "group_id": "single_gold_group_007",
+      "query": "How can network data flow representations enhance security monitoring?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "semantic",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "table",
+      "reference_answer": "Maintaining network data flow representations can improve the accuracy of detecting malicious data flows and communication.",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00085",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00085"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 3,
+      "correct_citation_count": 1,
+      "citation_precision": 0.3333333333333333,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00085",
+        "e5c72935263d-00025",
+        "6ca34d2a8b1c-00136"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00085"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 10.063,
+      "error": "",
+      "response": "Network data flow representations can enhance security monitoring by improving the accuracy of detecting malicious data flows and communication [1]. They also allow for better understanding of network structures, aiding in incident response and containment of intrusions [2]. Additionally, maintaining these representations supports continuous monitoring efforts, helping to identify anomalies and indicators of compromise [4]."
+    },
+    {
+      "id": "ret_021",
+      "group_id": "single_gold_group_007",
+      "query": "What is the advantage of keeping track of network data flows?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "natural",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "table",
+      "reference_answer": "Maintaining network data flow representations can improve the accuracy of detecting malicious data flows and communication.",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00085",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00085"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 3,
+      "correct_citation_count": 1,
+      "citation_precision": 0.3333333333333333,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00085",
+        "e5c72935263d-00026",
+        "e5c72935263d-00028"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00085"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 10.365,
+      "error": "",
+      "response": "Keeping track of network data flows allows for improved accuracy in detecting malicious data flows and communication [1]. It also helps incident responders understand where to focus their efforts during an incident [2]. Additionally, maintaining network diagrams with data flows supports triage and remediation of cybersecurity events by enabling analysis of logs to determine the impact of events and ascertain if an incident has occurred [4]."
+    },
+    {
+      "id": "ret_022",
+      "group_id": "single_gold_group_008",
+      "query": "What is TLP:CLEAR's purpose?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "lexical",
+      "source": "StopRansomware-Guide 508.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "TLP:CLEAR is a classification for information that may be distributed without restriction.",
+      "primary_gold_chunk_id": "e5c72935263d-00000",
+      "acceptable_gold_chunk_ids": [
+        "e5c72935263d-00000"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered_partial",
+      "rounds": 3,
+      "fully_answered": 0,
+      "answer_produced": 1,
+      "grounded_success": 0,
+      "citation_count": 1,
+      "correct_citation_count": 1,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "e5c72935263d-00000"
+      ],
+      "correct_cited_chunk_ids": [
+        "e5c72935263d-00000"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 19.636,
+      "error": "",
+      "response": "TLP:CLEAR's purpose is to allow unrestricted distribution of information, as it is marked for public release with minimal or no foreseeable risk of misuse [1]."
+    },
+    {
+      "id": "ret_023",
+      "group_id": "single_gold_group_008",
+      "query": "Under what conditions is TLP:CLEAR applicable?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "semantic",
+      "source": "StopRansomware-Guide 508.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "TLP:CLEAR is a classification for information that may be distributed without restriction.",
+      "primary_gold_chunk_id": "e5c72935263d-00000",
+      "acceptable_gold_chunk_ids": [
+        "e5c72935263d-00000"
+      ],
+      "actual_category": "in_scope",
+      "status": "insufficient",
+      "rounds": 3,
+      "fully_answered": 0,
+      "answer_produced": 0,
+      "grounded_success": 0,
+      "citation_count": 0,
+      "correct_citation_count": 0,
+      "citation_precision": null,
+      "citation_hit": 0,
+      "primary_citation_hit": 0,
+      "cited_chunk_ids": [],
+      "correct_cited_chunk_ids": [],
+      "citation_integrity": null,
+      "dropped_markers": [],
+      "confidence": "",
+      "latency_s": 17.91,
+      "error": "",
+      "response": "I could not find sufficient supporting material in the indexed documents to answer this reliably.\n\nWhat is missing: The specific conditions under which TLP:CLEAR is applicable in cybersecurity frameworks."
+    },
+    {
+      "id": "ret_024",
+      "group_id": "single_gold_group_008",
+      "query": "When can information be shared freely according to TLP:CLEAR?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "natural",
+      "source": "StopRansomware-Guide 508.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "TLP:CLEAR is a classification for information that may be distributed without restriction.",
+      "primary_gold_chunk_id": "e5c72935263d-00000",
+      "acceptable_gold_chunk_ids": [
+        "e5c72935263d-00000"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered_partial",
+      "rounds": 3,
+      "fully_answered": 0,
+      "answer_produced": 1,
+      "grounded_success": 0,
+      "citation_count": 1,
+      "correct_citation_count": 1,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "e5c72935263d-00000"
+      ],
+      "correct_cited_chunk_ids": [
+        "e5c72935263d-00000"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 21.067,
+      "error": "",
+      "response": "Information can be shared freely according to TLP:CLEAR when it is marked as TLP:CLEAR, as this classification allows for unrestricted distribution and disclosure, as stated in the document [1]."
+    },
+    {
+      "id": "ret_025",
+      "group_id": "single_gold_group_009",
+      "query": "What should be included in contracts involving third-party incident response responsibilities?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "lexical",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Third parties may have responsibilities in incident response that should be clearly defined in contracts.",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00037",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00037"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered_partial",
+      "rounds": 3,
+      "fully_answered": 0,
+      "answer_produced": 1,
+      "grounded_success": 0,
+      "citation_count": 2,
+      "correct_citation_count": 1,
+      "citation_precision": 0.5,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00037",
+        "e5c72935263d-00023"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00037"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "medium",
+      "latency_s": 24.611,
+      "error": "",
+      "response": "Contracts involving third-party incident response responsibilities should include clearly defined roles and responsibilities, including information flows, coordination, and authority to act on behalf of the organization [1]. They should also address restrictions on what the service provider can do, such as sharing sanitized incident information with other customers or making operational decisions (e.g., deactivating services to contain an incident) [1]. Additionally, contracts must ensure that third parties follow applicable best practices for cybersecurity, including risk management and cyber hygiene, particularly if they handle backups [3]. Contractual language should formalize security requirements, enforce least privilege and separation of duties for third-party access, and include provisions for monitoring and mitigating risks posed by suppliers and third parties [3]."
+    },
+    {
+      "id": "ret_026",
+      "group_id": "single_gold_group_009",
+      "query": "How should an organization handle incident response responsibilities with external partners?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "semantic",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Third parties may have responsibilities in incident response that should be clearly defined in contracts.",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00037",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00037"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 0,
+      "citation_count": 3,
+      "correct_citation_count": 0,
+      "citation_precision": 0.0,
+      "citation_hit": 0,
+      "primary_citation_hit": 0,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00036",
+        "6ca34d2a8b1c-00162",
+        "6ca34d2a8b1c-00163"
+      ],
+      "correct_cited_chunk_ids": [],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 12.123,
+      "error": "",
+      "response": "An organization should handle incident response responsibilities with external partners by defining roles and responsibilities in contracts, coordinating incident response activities, and sharing information securely. According to NIST, incident response involves multiple internal and external parties, including third-party service providers like MSSPs or CSPs, who may have primary roles in detection, response, and recovery [1]. Organizations must establish clear contractual agreements to define responsibilities, information flows, and coordination mechanisms with external partners [1]. Additionally, incident response plans should include mechanisms for coordinating with external stakeholders, such as notifying law enforcement, regulatory bodies, and third parties about data breaches in compliance with legal requirements [3]. Information sharing with external partners should be conducted securely and in line with information-sharing agreements, as voluntary sharing of threat intelligence can enhance situational awareness and resilience [4]."
+    },
+    {
+      "id": "ret_027",
+      "group_id": "single_gold_group_009",
+      "query": "What is required for third-party involvement in incident response activities?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "natural",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Third parties may have responsibilities in incident response that should be clearly defined in contracts.",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00037",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00037"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered_partial",
+      "rounds": 3,
+      "fully_answered": 0,
+      "answer_produced": 1,
+      "grounded_success": 0,
+      "citation_count": 4,
+      "correct_citation_count": 1,
+      "citation_precision": 0.25,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00037",
+        "6ca34d2a8b1c-00060",
+        "6ca34d2a8b1c-00162",
+        "6ca34d2a8b1c-00163"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00037"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 26.274,
+      "error": "",
+      "response": "Third-party involvement in incident response activities requires clear contractual agreements that define responsibilities, information flows, coordination, and authority to act on behalf of the organization [1]. Additionally, roles and responsibilities involving third parties should be documented in the organization's policies, and appropriate authorities must be designated to fulfill these responsibilities [2]. During incident response, coordination with third parties is essential, including notifying them of data breaches and other incidents in accordance with legal and contractual requirements [4]. Information sharing with third parties should be conducted securely, in line with the organization's response plans and information sharing agreements, including contracts with suppliers [6]."
+    },
+    {
+      "id": "ret_028",
+      "group_id": "single_gold_group_010",
+      "query": "What progression do NIST CSF Tiers represent in cybersecurity practices?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "lexical",
+      "source": "NIST.CSWP.29.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "The NIST CSF Tiers describe a progression from informal, ad hoc responses to approaches that are agile, risk-informed, and continuously improving",
+      "primary_gold_chunk_id": "17684aea55c3-00017",
+      "acceptable_gold_chunk_ids": [
+        "17684aea55c3-00017"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 3,
+      "correct_citation_count": 1,
+      "citation_precision": 0.3333333333333333,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "17684aea55c3-00017",
+        "17684aea55c3-00074",
+        "17684aea55c3-00061"
+      ],
+      "correct_cited_chunk_ids": [
+        "17684aea55c3-00017"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 12.897,
+      "error": "",
+      "response": "The NIST CSF Tiers represent a progression from informal, ad hoc responses to approaches that are agile, risk-informed, and continuously improving [1]. The four Tiers are Partial (Tier 1), Risk Informed (Tier 2), Repeatable (Tier 3), and Adaptive (Tier 4) [2]. Tier 1 is the lowest level, characterized by minimal or no cybersecurity risk management practices, while Tier 4 represents the highest level of maturity, with organization-wide, risk-informed policies and continuous adaptation to evolving threats [3]. Progression to higher Tiers is encouraged when risks or mandates are greater or when a cost-benefit analysis indicates a feasible and cost-effective reduction of negative cybersecurity risks [1]."
+    },
+    {
+      "id": "ret_029",
+      "group_id": "single_gold_group_010",
+      "query": "How do the CSF Tiers describe the evolution of risk management approaches?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "semantic",
+      "source": "NIST.CSWP.29.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "The NIST CSF Tiers describe a progression from informal, ad hoc responses to approaches that are agile, risk-informed, and continuously improving",
+      "primary_gold_chunk_id": "17684aea55c3-00017",
+      "acceptable_gold_chunk_ids": [
+        "17684aea55c3-00017"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered_partial",
+      "rounds": 3,
+      "fully_answered": 0,
+      "answer_produced": 1,
+      "grounded_success": 0,
+      "citation_count": 5,
+      "correct_citation_count": 1,
+      "citation_precision": 0.2,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "17684aea55c3-00017",
+        "17684aea55c3-00061",
+        "17684aea55c3-00060",
+        "17684aea55c3-00059",
+        "17684aea55c3-00058"
+      ],
+      "correct_cited_chunk_ids": [
+        "17684aea55c3-00017"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 26.586,
+      "error": "",
+      "response": "The CSF Tiers describe the evolution of risk management approaches as a progression from informal, ad hoc responses to approaches that are agile, risk-informed, and continuously improving [1]. Tier 1 (Partial) represents ad hoc risk management practices, while Tier 2 (Risk Informed) involves management-approved practices informed by risk objectives and threats. Tier 3 (Repeatable) establishes formal policies and consistent risk management, and Tier 4 (Adaptive) reflects an organization-wide, continuously improving approach that adapts to evolving threats and integrates cybersecurity into organizational culture [2][3][4][5]."
+    },
+    {
+      "id": "ret_030",
+      "group_id": "single_gold_group_010",
+      "query": "What does the NIST CSF Tiers framework illustrate about organizational responses?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "natural",
+      "source": "NIST.CSWP.29.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "The NIST CSF Tiers describe a progression from informal, ad hoc responses to approaches that are agile, risk-informed, and continuously improving",
+      "primary_gold_chunk_id": "17684aea55c3-00017",
+      "acceptable_gold_chunk_ids": [
+        "17684aea55c3-00017"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 3,
+      "correct_citation_count": 1,
+      "citation_precision": 0.3333333333333333,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "17684aea55c3-00017",
+        "17684aea55c3-00009",
+        "17684aea55c3-00061"
+      ],
+      "correct_cited_chunk_ids": [
+        "17684aea55c3-00017"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 13.183,
+      "error": "",
+      "response": "The NIST CSF Tiers framework illustrates the progression of an organization's cybersecurity risk governance and management practices, reflecting how they view and manage risks through four tiers: Partial (Tier 1), Risk Informed (Tier 2), Repeatable (Tier 3), and Adaptive (Tier 4) [1]. These tiers describe a movement from informal, ad hoc responses to more agile, risk-informed, and continuously improving approaches [1]. The framework provides context for how organizations assess and manage cybersecurity risks, with higher tiers indicating more rigorous and adaptive practices [2]. For instance, Tier 4 (Adaptive) involves an organization-wide approach that uses risk-informed policies and continuously adapts to evolving threats, while Tier 3 (Repeatable) focuses on formally approved policies and consistent risk management practices [3]."
+    },
+    {
+      "id": "ret_031",
+      "group_id": "single_gold_group_011",
+      "query": "What is the first recommendation for initiating incident recovery?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "lexical",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "table",
+      "reference_answer": "Apply incident recovery criteria to known and assumed characteristics of the incident to determine when an incident's recovery processes should be initiated.",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00155",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00155"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 1,
+      "correct_citation_count": 1,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00155"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00155"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 8.385,
+      "error": "",
+      "response": "The first recommendation for initiating incident recovery is to apply incident recovery criteria to known and assumed characteristics of the incident to determine when an incident's recovery processes should be initiated [1]."
+    },
+    {
+      "id": "ret_032",
+      "group_id": "single_gold_group_011",
+      "query": "How should incident recovery be triggered based on the CSF?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "semantic",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "table",
+      "reference_answer": "Apply incident recovery criteria to known and assumed characteristics of the incident to determine when an incident's recovery processes should be initiated.",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00155",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00155"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 3,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 4,
+      "correct_citation_count": 1,
+      "citation_precision": 0.25,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00155",
+        "6ca34d2a8b1c-00150",
+        "17684aea55c3-00055",
+        "6ca34d2a8b1c-00169"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00155"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 22.975,
+      "error": "",
+      "response": "Incident recovery should be triggered based on the criteria outlined in the Cybersecurity Framework (CSF), which include applying incident recovery criteria to known and assumed characteristics of the incident to determine when recovery processes should be initiated [1]. Additionally, the decision to initiate recovery processes should be based on risk evaluation factors such as asset criticality, functional impact, data impact, stage of observed activity, threat actor characterization, and recoverability [2]. The incident response plan is executed in coordination with relevant third parties once an incident is declared, and incidents are categorized, prioritized, and escalated as needed [3]. Recovery procedures should begin during or after incident response processes, and all individuals with recovery responsibilities should be informed about the plans and required authorizations [4]."
+    },
+    {
+      "id": "ret_033",
+      "group_id": "single_gold_group_011",
+      "query": "When should recovery processes start according to the guidelines?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "natural",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "table",
+      "reference_answer": "Apply incident recovery criteria to known and assumed characteristics of the incident to determine when an incident's recovery processes should be initiated.",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00155",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00155"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 2,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 3,
+      "correct_citation_count": 1,
+      "citation_precision": 0.3333333333333333,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00155",
+        "6ca34d2a8b1c-00150",
+        "6ca34d2a8b1c-00039"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00155"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 11.932,
+      "error": "",
+      "response": "Recovery processes should start when the criteria for initiating incident recovery are applied, which involves evaluating the incident's characteristics and possible operational disruption [1]. Additionally, the decision to initiate recovery processes should be based on risk evaluation factors such as asset criticality, functional impact, data impact, and recoverability [2]. Organizations should also have documented procedures for initiating recovery processes as part of their incident response policies [3]."
+    },
+    {
+      "id": "ret_034",
+      "group_id": "single_gold_group_012",
+      "query": "How should external SMB access be restricted?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "lexical",
+      "source": "StopRansomware-Guide 508.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "SMB communications should be blocked on external networks by blocking TCP port 445 inbound and outbound at internet perimeter firewalls",
+      "primary_gold_chunk_id": "e5c72935263d-00013",
+      "acceptable_gold_chunk_ids": [
+        "e5c72935263d-00013"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 1,
+      "correct_citation_count": 1,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "e5c72935263d-00013"
+      ],
+      "correct_cited_chunk_ids": [
+        "e5c72935263d-00013"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 10.921,
+      "error": "",
+      "response": "External SMB access should be restricted by blocking TCP port 445 inbound and outbound at internet perimeter firewalls, as well as ports 137, 138, and 139 [1]. Additionally, organizations should block or limit internal SMB traffic to only necessary systems, configure Windows systems to require Kerberos-based IPsec for lateral SMB communications, and disable the SMB Server service when not needed [1]. It is also recommended to upgrade to SMBv3 and implement SMBv3 security features such as encryption and signing [1]."
+    },
+    {
+      "id": "ret_035",
+      "group_id": "single_gold_group_012",
+      "query": "What is the recommended method for preventing unauthorized SMB traffic?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "semantic",
+      "source": "StopRansomware-Guide 508.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "SMB communications should be blocked on external networks by blocking TCP port 445 inbound and outbound at internet perimeter firewalls",
+      "primary_gold_chunk_id": "e5c72935263d-00013",
+      "acceptable_gold_chunk_ids": [
+        "e5c72935263d-00013"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 1,
+      "correct_citation_count": 1,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "e5c72935263d-00013"
+      ],
+      "correct_cited_chunk_ids": [
+        "e5c72935263d-00013"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 12.049,
+      "error": "",
+      "response": "The recommended method for preventing unauthorized SMB traffic includes blocking unnecessary SMB communications by blocking TCP port 445 inbound and outbound at internet perimeter firewalls, as well as blocking TCP ports 137, 138, and 139 [1]. Additionally, internal SMB traffic should be restricted to only necessary systems, and SMB Server service should be disabled on devices where not required [1]. Configuring Windows systems to require Kerberos-based IPsec for lateral SMB communications is also advised [1]. Disabling SMBv1 and upgrading to SMBv3, with a focus on SMBv3.1.1, is recommended to enhance security protections [1]. Furthermore, implementing SMB encryption and requiring SMB signing for both clients and servers can prevent attacks [1]."
+    },
+    {
+      "id": "ret_036",
+      "group_id": "single_gold_group_012",
+      "query": "What firewall settings are advised for SMB traffic?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "natural",
+      "source": "StopRansomware-Guide 508.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "SMB communications should be blocked on external networks by blocking TCP port 445 inbound and outbound at internet perimeter firewalls",
+      "primary_gold_chunk_id": "e5c72935263d-00013",
+      "acceptable_gold_chunk_ids": [
+        "e5c72935263d-00013"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 2,
+      "correct_citation_count": 1,
+      "citation_precision": 0.5,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "e5c72935263d-00013",
+        "e5c72935263d-00014"
+      ],
+      "correct_cited_chunk_ids": [
+        "e5c72935263d-00013"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 10.304,
+      "error": "",
+      "response": "The advised firewall settings for SMB traffic include blocking unnecessary SMB communications by blocking TCP port 445 inbound and outbound at internet perimeter firewalls, as well as blocking TCP ports 137, 138, and 139 [1]. Additionally, internal SMB traffic should be restricted to only necessary systems, and SMB Server service should be disabled on devices where not needed [1]. It is also recommended to require SMB encryption, disable SMB 1.0, and upgrade to SMBv3, with SMBv3.1.1 being preferred for enhanced security protections [1]. Furthermore, SMB over QUIC should be used for added security, and SMB traffic should be logged and monitored [3]."
+    },
+    {
+      "id": "ret_037",
+      "group_id": "single_gold_group_013",
+      "query": "What are the six CSF 2.0 Functions in the incident response life cycle model?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "lexical",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "The incident response life cycle model is based on the six CSF 2.0 Functions: Govern, Identify, Protect, Detect, Respond, and Recover.",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00024",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00024"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 1,
+      "correct_citation_count": 1,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00024"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00024"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 12.02,
+      "error": "",
+      "response": "The six CSF 2.0 Functions in the incident response life cycle model are Govern [1], Identify [1], Protect [1], Detect [1], Respond [1], and Recover [1]."
+    },
+    {
+      "id": "ret_038",
+      "group_id": "single_gold_group_013",
+      "query": "Which functions are part of the cybersecurity risk management framework according to the incident response model?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "semantic",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "The incident response life cycle model is based on the six CSF 2.0 Functions: Govern, Identify, Protect, Detect, Respond, and Recover.",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00024",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00024"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 2,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 1,
+      "correct_citation_count": 1,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00024"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00024"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 15.57,
+      "error": "",
+      "response": "The functions part of the cybersecurity risk management framework according to the incident response model are Govern [2], Identify [2], Protect [2], Detect [2], Respond [2], and Recover [2]."
+    },
+    {
+      "id": "ret_039",
+      "group_id": "single_gold_group_013",
+      "query": "What are the key functions that make up the incident response life cycle based on CSF 2.0?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "natural",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "The incident response life cycle model is based on the six CSF 2.0 Functions: Govern, Identify, Protect, Detect, Respond, and Recover.",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00024",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00024"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 1,
+      "correct_citation_count": 1,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00024"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00024"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 8.641,
+      "error": "",
+      "response": "The key functions that make up the incident response life cycle based on CSF 2.0 are Govern, Identify, Protect, Detect, Respond, and Recover [1]."
+    },
+    {
+      "id": "ret_040",
+      "group_id": "single_gold_group_014",
+      "query": "Which technologies does the CSF Core cover?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "lexical",
+      "source": "NIST.CSWP.29.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "The CSF Core applies to all ICT used by an organization, including IT, IoT, and OT.",
+      "primary_gold_chunk_id": "17684aea55c3-00013",
+      "acceptable_gold_chunk_ids": [
+        "17684aea55c3-00013"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered_partial",
+      "rounds": 3,
+      "fully_answered": 0,
+      "answer_produced": 1,
+      "grounded_success": 0,
+      "citation_count": 2,
+      "correct_citation_count": 1,
+      "citation_precision": 0.5,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "17684aea55c3-00013",
+        "17684aea55c3-00024"
+      ],
+      "correct_cited_chunk_ids": [
+        "17684aea55c3-00013"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 20.575,
+      "error": "",
+      "response": "The CSF Core covers technologies including information technology (IT), the Internet of Things (IoT), operational technology (OT), cloud, mobile, and artificial intelligence systems [1]. It also addresses risks from emerging technologies such as artificial intelligence (AI) through the NIST Artificial Intelligence Risk Management Framework (AI RMF) [2]."
+    },
+    {
+      "id": "ret_041",
+      "group_id": "single_gold_group_014",
+      "query": "What types of technology environments are included in the CSF Core?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "semantic",
+      "source": "NIST.CSWP.29.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "The CSF Core applies to all ICT used by an organization, including IT, IoT, and OT.",
+      "primary_gold_chunk_id": "17684aea55c3-00013",
+      "acceptable_gold_chunk_ids": [
+        "17684aea55c3-00013"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 1,
+      "correct_citation_count": 1,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "17684aea55c3-00013"
+      ],
+      "correct_cited_chunk_ids": [
+        "17684aea55c3-00013"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 9.249,
+      "error": "",
+      "response": "The CSF Core includes technology environments such as cloud, mobile, and artificial intelligence systems [1]. It applies to all types of technology environments, including information technology (IT), the Internet of Things (IoT), and operational technology (OT) [1]."
+    },
+    {
+      "id": "ret_042",
+      "group_id": "single_gold_group_014",
+      "query": "Does the CSF Core apply to IoT devices?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "natural",
+      "source": "NIST.CSWP.29.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "The CSF Core applies to all ICT used by an organization, including IT, IoT, and OT.",
+      "primary_gold_chunk_id": "17684aea55c3-00013",
+      "acceptable_gold_chunk_ids": [
+        "17684aea55c3-00013"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 1,
+      "correct_citation_count": 1,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "17684aea55c3-00013"
+      ],
+      "correct_cited_chunk_ids": [
+        "17684aea55c3-00013"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 6.862,
+      "error": "",
+      "response": "Yes, the CSF Core applies to IoT devices [1]."
+    },
+    {
+      "id": "ret_043",
+      "group_id": "single_gold_group_015",
+      "query": "What does the CSF 2.0 Community Profile recommend regarding protection mechanisms?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "lexical",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "table",
+      "reference_answer": "The CSF 2.0 Community Profile recommends that organizations understand the protection mechanisms in place to detect protection failures and bypasses.",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00106",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00106"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered_partial",
+      "rounds": 3,
+      "fully_answered": 0,
+      "answer_produced": 1,
+      "grounded_success": 0,
+      "citation_count": 2,
+      "correct_citation_count": 1,
+      "citation_precision": 0.5,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00106",
+        "6ca34d2a8b1c-00141"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00106"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 21.575,
+      "error": "",
+      "response": "The CSF 2.0 Community Profile recommends that protection mechanisms be monitored for signs of tampering, failure, or compromise [1]. It also emphasizes understanding these mechanisms to deploy methods for detecting protection failures and bypasses [1]. Additionally, it suggests monitoring hardware and software, including cybersecurity protection mechanisms, for such issues [2]."
+    },
+    {
+      "id": "ret_044",
+      "group_id": "single_gold_group_015",
+      "query": "What should organizations do to identify protection failures according to the Community Profile?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "semantic",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "table",
+      "reference_answer": "The CSF 2.0 Community Profile recommends that organizations understand the protection mechanisms in place to detect protection failures and bypasses.",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00106",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00106"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered_partial",
+      "rounds": 3,
+      "fully_answered": 0,
+      "answer_produced": 1,
+      "grounded_success": 0,
+      "citation_count": 1,
+      "correct_citation_count": 1,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00106"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00106"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 20.728,
+      "error": "",
+      "response": "Organizations should understand the protection mechanisms in place to detect protection failures and bypasses [1]."
+    },
+    {
+      "id": "ret_045",
+      "group_id": "single_gold_group_015",
+      "query": "How can organizations detect protection failures as per the CSF 2.0 Community Profile?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "natural",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "table",
+      "reference_answer": "The CSF 2.0 Community Profile recommends that organizations understand the protection mechanisms in place to detect protection failures and bypasses.",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00106",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00106"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 3,
+      "correct_citation_count": 1,
+      "citation_precision": 0.3333333333333333,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00141",
+        "6ca34d2a8b1c-00106",
+        "6ca34d2a8b1c-00143"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00106"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 12.86,
+      "error": "",
+      "response": "Organizations can detect protection failures as per the CSF 2.0 Community Profile by implementing continuous monitoring of computing hardware, software, runtime environments, and their data to identify adverse events [1]. This includes monitoring attack vectors like email, web, and file sharing for malware, phishing, and data exfiltration [1], as well as tracking authentication attempts for credential-based attacks [1]. Additionally, monitoring software and hardware configurations for deviations from security baselines and checking for signs of tampering or compromise is essential [1]. The use of tools such as SIEM and SOAR for continuous log monitoring and generating reports on findings is recommended [3]. Incorporating up-to-date Cyber Threat Intelligence (CTI) in log analysis tools improves detection accuracy and helps characterize threat actors [3]. Manual reviews of log events for technologies not fully automatable are also advised [3]. Understanding existing protection mechanisms aids in detecting failures and bypasses [2]."
+    },
+    {
+      "id": "ret_046",
+      "group_id": "single_gold_group_016",
+      "query": "What is the recommended procedure for restoring data after a ransomware incident?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "lexical",
+      "source": "StopRansomware-Guide 508.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Reconnect systems and restore data from offline, encrypted backups based on a prioritization of critical services.",
+      "primary_gold_chunk_id": "e5c72935263d-00038",
+      "acceptable_gold_chunk_ids": [
+        "e5c72935263d-00038"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered_partial",
+      "rounds": 3,
+      "fully_answered": 0,
+      "answer_produced": 1,
+      "grounded_success": 0,
+      "citation_count": 4,
+      "correct_citation_count": 1,
+      "citation_precision": 0.25,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "e5c72935263d-00009",
+        "17684aea55c3-00056",
+        "6ca34d2a8b1c-00167",
+        "e5c72935263d-00038"
+      ],
+      "correct_cited_chunk_ids": [
+        "e5c72935263d-00038"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 22.605,
+      "error": "",
+      "response": "The recommended procedure for restoring data after a ransomware incident includes restoring from offline, encrypted backups [1], verifying the integrity of backups before use [2], and executing the recovery portion of the incident response plan [2]. Additionally, systems should be restored from clean backups, rebuilt if necessary, and vulnerabilities addressed to prevent recurrence [3]. Reconnecting systems should be done carefully to avoid re-infection [4]."
+    },
+    {
+      "id": "ret_047",
+      "group_id": "single_gold_group_016",
+      "query": "How should organizations recover their systems while preventing re-infection?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "semantic",
+      "source": "StopRansomware-Guide 508.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Reconnect systems and restore data from offline, encrypted backups based on a prioritization of critical services.",
+      "primary_gold_chunk_id": "e5c72935263d-00038",
+      "acceptable_gold_chunk_ids": [
+        "e5c72935263d-00038"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 4,
+      "correct_citation_count": 1,
+      "citation_precision": 0.25,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "e5c72935263d-00038",
+        "6ca34d2a8b1c-00167",
+        "e5c72935263d-00030",
+        "e5c72935263d-00031"
+      ],
+      "correct_cited_chunk_ids": [
+        "e5c72935263d-00038"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 10.573,
+      "error": "",
+      "response": "Organizations should recover their systems by reconnecting them to offline, encrypted backups based on critical service prioritization [1], while ensuring clean systems are added to a new VLAN for recovery to prevent re-infection [1]. They should restore systems from clean backups, rebuild systems, replace compromised files, install patches, change passwords, and tighten security controls [2]. Additionally, they must prioritize critical systems for restoration on a clean network and confirm the data nature on impacted systems [3]. It is essential to examine detection systems and logs to identify precursor malware and ensure no dropper malware remains before rebuilding from backups [4]."
+    },
+    {
+      "id": "ret_048",
+      "group_id": "single_gold_group_016",
+      "query": "What steps should be taken to restore data from backups post-incident?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "natural",
+      "source": "StopRansomware-Guide 508.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Reconnect systems and restore data from offline, encrypted backups based on a prioritization of critical services.",
+      "primary_gold_chunk_id": "e5c72935263d-00038",
+      "acceptable_gold_chunk_ids": [
+        "e5c72935263d-00038"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 4,
+      "correct_citation_count": 1,
+      "citation_precision": 0.25,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "e5c72935263d-00038",
+        "17684aea55c3-00056",
+        "6ca34d2a8b1c-00167",
+        "6ca34d2a8b1c-00171"
+      ],
+      "correct_cited_chunk_ids": [
+        "e5c72935263d-00038"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 10.556,
+      "error": "",
+      "response": "To restore data from backups post-incident, the following steps should be taken: First, verify the integrity of backups and other restoration assets before using them for restoration [6]. Next, execute the recovery portion of the incident response plan, selecting, scoping, prioritizing, and performing recovery actions securely [2]. Reconnect systems and restore data from offline, encrypted backups based on a prioritization of critical services [1]. Restore critical mission functions and consider cybersecurity risk management to establish post-incident operational norms [2]. Confirm that restored assets are functioning normally, and remediate vulnerabilities to prevent similar incidents [3]. Finally, document lessons learned and share relevant indicators of compromise with CISA or your sector ISAC [1]."
+    },
+    {
+      "id": "ret_049",
+      "group_id": "single_gold_group_017",
+      "query": "How does NIST.SP.800-61r3 assist organizations in managing cybersecurity risks?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "semantic",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "The purpose of NIST.SP.800-61r3 is to help organizations incorporate cybersecurity incident response recommendations into their risk management activities and provide a common language for communication.",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00022",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00022"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered_partial",
+      "rounds": 3,
+      "fully_answered": 0,
+      "answer_produced": 1,
+      "grounded_success": 0,
+      "citation_count": 2,
+      "correct_citation_count": 1,
+      "citation_precision": 0.5,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00022",
+        "6ca34d2a8b1c-00021"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00022"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 24.196,
+      "error": "",
+      "response": "NIST.SP.800-61r3 assists organizations in managing cybersecurity risks by incorporating incident response recommendations into their cybersecurity risk management activities [1]. It provides a common language for communication about incident response plans and activities, and it aligns with the NIST Cybersecurity Framework (CSF) 2.0 Functions to improve incident response capabilities. The publication encourages the use of other NIST resources, such as the CSF 2.0 publication and supplemental materials, to enhance incident response considerations [1]. Additionally, it helps reduce risks by enabling systematic responses to incidents, minimizing data loss, service disruption, and overall impact through effective incident response processes [2]."
+    },
+    {
+      "id": "ret_050",
+      "group_id": "single_gold_group_017",
+      "query": "What is the main goal of the NIST SP 800-61r3 publication?",
+      "gold_multiplicity": "single_gold",
+      "duplication_scope": "unique",
+      "paraphrase_type": "natural",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "The purpose of NIST.SP.800-61r3 is to help organizations incorporate cybersecurity incident response recommendations into their risk management activities and provide a common language for communication.",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00022",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00022"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 1,
+      "correct_citation_count": 1,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00022"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00022"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 10.178,
+      "error": "",
+      "response": "The main goal of the NIST SP 800-61r3 publication is to help organizations incorporate cybersecurity incident response recommendations and considerations throughout their cybersecurity risk management activities [1], while also providing a common language for communication regarding incident response plans and activities [1]. The publication focuses on improving cybersecurity risk management for all of the NIST Cybersecurity Framework (CSF) 2.0 Functions by shifting the focus from guidelines on handling incidents to recommendations for integrating incident response into risk management [1]."
+    },
+    {
+      "id": "ret_051",
+      "group_id": "multi_gold_group_001",
+      "query": "What is maintained for software, services, and systems managed by the organization?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "mixed",
+      "paraphrase_type": "lexical",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "table",
+      "reference_answer": "Inventories of software, services, and systems managed by the organization are maintained",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00084",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00084",
+        "17684aea55c3-00051",
+        "6ca34d2a8b1c-00083"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 1,
+      "correct_citation_count": 1,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00084"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00084"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 8.941,
+      "error": "",
+      "response": "The organization maintains inventories of software, services, and systems managed by the organization [1], as part of the Asset Management (ID.AM) function under the NIST Cybersecurity Framework. These inventories are used for identifying and addressing vulnerabilities, monitoring operations, detecting adverse cybersecurity events, and identifying 'shadow IT' usage [1]."
+    },
+    {
+      "id": "ret_052",
+      "group_id": "multi_gold_group_001",
+      "query": "How should organizations track their software and system inventories according to the CSF?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "mixed",
+      "paraphrase_type": "semantic",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "table",
+      "reference_answer": "Inventories of software, services, and systems managed by the organization are maintained",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00084",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00084",
+        "17684aea55c3-00051",
+        "6ca34d2a8b1c-00083"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 3,
+      "correct_citation_count": 2,
+      "citation_precision": 0.6666666666666666,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00084",
+        "17684aea55c3-00051",
+        "6ca34d2a8b1c-00089"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00084",
+        "17684aea55c3-00051"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 12.103,
+      "error": "",
+      "response": "Organizations should maintain inventories of software, services, and systems managed by the organization according to the NIST Cybersecurity Framework [2]. These inventories should be current and automatically updated to support vulnerability management, monitoring operations, and identifying 'shadow IT' usage [1]. Additionally, systems, hardware, software, services, and data should be managed throughout their life cycles, considering cybersecurity aspects such as secure configuration, reducing attack surfaces, and updating inventory information during asset transfers or relocations [3]."
+    },
+    {
+      "id": "ret_053",
+      "group_id": "multi_gold_group_001",
+      "query": "What is required for maintaining software and system inventories within an organization?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "mixed",
+      "paraphrase_type": "natural",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "table",
+      "reference_answer": "Inventories of software, services, and systems managed by the organization are maintained",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00084",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00084",
+        "17684aea55c3-00051",
+        "6ca34d2a8b1c-00083"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered_partial",
+      "rounds": 3,
+      "fully_answered": 0,
+      "answer_produced": 1,
+      "grounded_success": 0,
+      "citation_count": 6,
+      "correct_citation_count": 1,
+      "citation_precision": 0.16666666666666666,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00084",
+        "6ca34d2a8b1c-00089",
+        "6ca34d2a8b1c-00086",
+        "6ca34d2a8b1c-00082",
+        "6ca34d2a8b1c-00088",
+        "6ca34d2a8b1c-00087"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00084"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 24.403,
+      "error": "",
+      "response": "Maintaining software and system inventories within an organization requires current and automatically updated inventories of the internal and external software, services, and systems used by the organization [1], as well as inventories of hardware, software, services, and systems managed by the organization throughout their life cycles, considering cybersecurity aspects such as secure configuration and updating inventory information during asset transfers [3]. Additionally, inventories of services provided by suppliers must be maintained and updated [4]. Asset management involves identifying and managing assets, including data, hardware, software, systems, facilities, services, and people, according to their importance to organizational objectives and risk strategy [5]. Furthermore, data inventories with classifications, owners, and locations are necessary [6], and assets should be prioritized based on classification, criticality, resources, and impact on the mission [7]."
+    },
+    {
+      "id": "ret_054",
+      "group_id": "multi_gold_group_002",
+      "query": "What does the organization do with its cybersecurity practices based on past and current activities?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "mixed",
+      "paraphrase_type": "lexical",
+      "source": "NIST.CSWP.29.pdf",
+      "chunk_type": "table",
+      "reference_answer": "The organization adapts its cybersecurity practices based on previous and current cybersecurity activities, including lessons learned and predictive indicators.",
+      "primary_gold_chunk_id": "17684aea55c3-00061",
+      "acceptable_gold_chunk_ids": [
+        "17684aea55c3-00061",
+        "17684aea55c3-00060",
+        "6ca34d2a8b1c-00068",
+        "6ca34d2a8b1c-00067"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 2,
+      "correct_citation_count": 2,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "17684aea55c3-00061",
+        "17684aea55c3-00060"
+      ],
+      "correct_cited_chunk_ids": [
+        "17684aea55c3-00061",
+        "17684aea55c3-00060"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 9.705,
+      "error": "",
+      "response": "The organization adapts its cybersecurity practices based on previous and current cybersecurity activities, including lessons learned and predictive indicators [1]. It incorporates continuous improvement through advanced cybersecurity technologies and practices to respond to evolving threats [1]. Additionally, the organization updates its cybersecurity practices regularly based on changes in business requirements, threats, and technological landscape [2]."
+    },
+    {
+      "id": "ret_055",
+      "group_id": "multi_gold_group_002",
+      "query": "How does an organization adjust its cybersecurity measures in response to new threats and past experiences?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "mixed",
+      "paraphrase_type": "semantic",
+      "source": "NIST.CSWP.29.pdf",
+      "chunk_type": "table",
+      "reference_answer": "The organization adapts its cybersecurity practices based on previous and current cybersecurity activities, including lessons learned and predictive indicators.",
+      "primary_gold_chunk_id": "17684aea55c3-00061",
+      "acceptable_gold_chunk_ids": [
+        "17684aea55c3-00061",
+        "17684aea55c3-00060",
+        "6ca34d2a8b1c-00068",
+        "6ca34d2a8b1c-00067"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 2,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 5,
+      "correct_citation_count": 3,
+      "citation_precision": 0.6,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00020",
+        "6ca34d2a8b1c-00068",
+        "17684aea55c3-00060",
+        "17684aea55c3-00051",
+        "17684aea55c3-00061"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00068",
+        "17684aea55c3-00060",
+        "17684aea55c3-00061"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 18.696,
+      "error": "",
+      "response": "An organization adjusts its cybersecurity measures in response to new threats and past experiences by integrating incident response into its cybersecurity risk management practices [1]. This includes reviewing and adjusting the cybersecurity risk management strategy to ensure coverage of organizational requirements and risks, taking into account lessons learned from past incidents [2]. The organization's risk management practices are formally approved and expressed as policy, with consistent methods in place to respond effectively to changes in risk, including updates based on changes in the technological landscape and threat environment [3]. Additionally, the organization continuously improves its cybersecurity risk management processes by identifying improvements from evaluations, security tests, and incident response activities [4]. Executives ensure that cybersecurity is considered through all lines of operation, and the risk strategy is informed by cybersecurity risks associated with suppliers and products used [3]. The organization adapts its cybersecurity practices based on previous activities and predictive indicators, using real-time information to act upon risks [7]."
+    },
+    {
+      "id": "ret_056",
+      "group_id": "multi_gold_group_002",
+      "query": "What steps does a company take to update its cybersecurity approach using what it has learned?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "mixed",
+      "paraphrase_type": "natural",
+      "source": "NIST.CSWP.29.pdf",
+      "chunk_type": "table",
+      "reference_answer": "The organization adapts its cybersecurity practices based on previous and current cybersecurity activities, including lessons learned and predictive indicators.",
+      "primary_gold_chunk_id": "17684aea55c3-00061",
+      "acceptable_gold_chunk_ids": [
+        "17684aea55c3-00061",
+        "17684aea55c3-00060",
+        "6ca34d2a8b1c-00068",
+        "6ca34d2a8b1c-00067"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered_partial",
+      "rounds": 3,
+      "fully_answered": 0,
+      "answer_produced": 1,
+      "grounded_success": 0,
+      "citation_count": 4,
+      "correct_citation_count": 2,
+      "citation_precision": 0.5,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00067",
+        "17684aea55c3-00061",
+        "6ca34d2a8b1c-00104",
+        "6ca34d2a8b1c-00025"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00067",
+        "17684aea55c3-00061"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 23.198,
+      "error": "",
+      "response": "A company updates its cybersecurity approach by reviewing cybersecurity risk management strategy outcomes to inform and adjust strategy and direction [1], incorporating lessons learned from past incidents into its risk management strategy [1], identifying improvements from operational processes and incident response efforts [3], and continuously adapting cybersecurity practices based on previous activities and predictive indicators [2]. The organization also uses real-time information to understand and act upon risks from suppliers and acquired products [2], and feeds lessons learned from all activities into continuous improvement processes [4]."
+    },
+    {
+      "id": "ret_057",
+      "group_id": "multi_gold_group_003",
+      "query": "What are the sub-elements of the GOVERN function in the CSF Core?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "same_document",
+      "paraphrase_type": "lexical",
+      "source": "NIST.CSWP.29.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "The CSF Core includes the GOVERN (GV) function with sub-elements such as Organizational Context, Risk Management Strategy, and Roles, Responsibilities, and Authorities",
+      "primary_gold_chunk_id": "17684aea55c3-00048",
+      "acceptable_gold_chunk_ids": [
+        "17684aea55c3-00048",
+        "17684aea55c3-00028",
+        "17684aea55c3-00027",
+        "17684aea55c3-00011",
+        "17684aea55c3-00031",
+        "17684aea55c3-00026"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered_partial",
+      "rounds": 3,
+      "fully_answered": 0,
+      "answer_produced": 1,
+      "grounded_success": 0,
+      "citation_count": 7,
+      "correct_citation_count": 4,
+      "citation_precision": 0.5714285714285714,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "17684aea55c3-00028",
+        "17684aea55c3-00031",
+        "17684aea55c3-00048",
+        "17684aea55c3-00027",
+        "17684aea55c3-00029",
+        "17684aea55c3-00030",
+        "17684aea55c3-00049"
+      ],
+      "correct_cited_chunk_ids": [
+        "17684aea55c3-00028",
+        "17684aea55c3-00031",
+        "17684aea55c3-00048",
+        "17684aea55c3-00027"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 26.926,
+      "error": "",
+      "response": "The sub-elements of the GOVERN function in the CSF Core are [3] Organizational Context (GV.OC), Risk Management Strategy (GV.RM), Roles, Responsibilities, and Authorities (GV.RR), Policy (GV.PO), Oversight (GV.OV), and Cybersecurity Supply Chain Risk Management (GV.SC) [1][2][4][5][6][7]."
+    },
+    {
+      "id": "ret_058",
+      "group_id": "multi_gold_group_003",
+      "query": "Which components are part of the organizational risk management strategy according to the CSF Core?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "same_document",
+      "paraphrase_type": "semantic",
+      "source": "NIST.CSWP.29.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "The CSF Core includes the GOVERN (GV) function with sub-elements such as Organizational Context, Risk Management Strategy, and Roles, Responsibilities, and Authorities",
+      "primary_gold_chunk_id": "17684aea55c3-00048",
+      "acceptable_gold_chunk_ids": [
+        "17684aea55c3-00048",
+        "17684aea55c3-00028",
+        "17684aea55c3-00027",
+        "17684aea55c3-00011",
+        "17684aea55c3-00031",
+        "17684aea55c3-00026"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered_partial",
+      "rounds": 3,
+      "fully_answered": 0,
+      "answer_produced": 1,
+      "grounded_success": 0,
+      "citation_count": 2,
+      "correct_citation_count": 1,
+      "citation_precision": 0.5,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "17684aea55c3-00048",
+        "17684aea55c3-00020"
+      ],
+      "correct_cited_chunk_ids": [
+        "17684aea55c3-00048"
+      ],
+      "citation_integrity": 0,
+      "dropped_markers": [
+        3
+      ],
+      "confidence": "high",
+      "latency_s": 27.385,
+      "error": "",
+      "response": "The components of the organizational risk management strategy according to the CSF Core are [1] Organizational Context (GV.OC), [2] Risk Management Strategy (GV.RM), and Roles, Responsibilities, and Authorities (GV.RR). These components include specific sub-components such as understanding stakeholder expectations, establishing risk appetite statements, and defining roles and responsibilities for cybersecurity risk management [1]."
+    },
+    {
+      "id": "ret_059",
+      "group_id": "multi_gold_group_003",
+      "query": "What are the key aspects covered under the GOVERN function in the CSF 2.0?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "same_document",
+      "paraphrase_type": "natural",
+      "source": "NIST.CSWP.29.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "The CSF Core includes the GOVERN (GV) function with sub-elements such as Organizational Context, Risk Management Strategy, and Roles, Responsibilities, and Authorities",
+      "primary_gold_chunk_id": "17684aea55c3-00048",
+      "acceptable_gold_chunk_ids": [
+        "17684aea55c3-00048",
+        "17684aea55c3-00028",
+        "17684aea55c3-00027",
+        "17684aea55c3-00011",
+        "17684aea55c3-00031",
+        "17684aea55c3-00026"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 1,
+      "correct_citation_count": 1,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 0,
+      "cited_chunk_ids": [
+        "17684aea55c3-00011"
+      ],
+      "correct_cited_chunk_ids": [
+        "17684aea55c3-00011"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 12.289,
+      "error": "",
+      "response": "The key aspects covered under the GOVERN function in the CSF 2.0 include [1] the organization's cybersecurity risk management strategy, expectations, and policy being established, communicated, and monitored. This encompasses understanding the organizational context, such as mission, stakeholder expectations, dependencies, and legal requirements [1]. It also involves establishing a risk management strategy with priorities, constraints, risk tolerance, and appetite statements [1], as well as defining roles, responsibilities, and authorities to ensure accountability and continuous improvement [1]."
+    },
+    {
+      "id": "ret_060",
+      "group_id": "multi_gold_group_004",
+      "query": "What should be followed to engage internal and external teams during a cyber incident?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "mixed",
+      "paraphrase_type": "lexical",
+      "source": "StopRansomware-Guide 508.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Follow notification requirements as outlined in your cyber incident response and communications plan to engage internal and external teams and stakeholders",
+      "primary_gold_chunk_id": "e5c72935263d-00034",
+      "acceptable_gold_chunk_ids": [
+        "e5c72935263d-00034",
+        "6ca34d2a8b1c-00162",
+        "6ca34d2a8b1c-00161"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 3,
+      "correct_citation_count": 2,
+      "citation_precision": 0.6666666666666666,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "e5c72935263d-00034",
+        "6ca34d2a8b1c-00162",
+        "17684aea55c3-00055"
+      ],
+      "correct_cited_chunk_ids": [
+        "e5c72935263d-00034",
+        "6ca34d2a8b1c-00162"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 12.772,
+      "error": "",
+      "response": "To engage internal and external teams during a cyber incident, the organization should follow the notification requirements outlined in the cyber incident response and communications plan [1]. This includes sharing information with relevant stakeholders such as the IT department, managed security service providers, cyber insurance companies, and departmental or elected leaders [1]. Additionally, the incident response plan should be executed in coordination with relevant third parties once an incident is declared [5]. The incident response team should coordinate with appropriate individuals inside and outside the organization to ensure all involved parties play their roles [3]. Furthermore, information should be shared with designated internal and external stakeholders in accordance with laws, regulations, or policies [5]. It is also important to notify law enforcement agencies and regulatory bodies of incidents based on criteria in the incident response plan and management approval [3]."
+    },
+    {
+      "id": "ret_061",
+      "group_id": "multi_gold_group_004",
+      "query": "How do organizations communicate with stakeholders during a ransomware incident according to the guide?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "mixed",
+      "paraphrase_type": "semantic",
+      "source": "StopRansomware-Guide 508.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Follow notification requirements as outlined in your cyber incident response and communications plan to engage internal and external teams and stakeholders",
+      "primary_gold_chunk_id": "e5c72935263d-00034",
+      "acceptable_gold_chunk_ids": [
+        "e5c72935263d-00034",
+        "6ca34d2a8b1c-00162",
+        "6ca34d2a8b1c-00161"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 1,
+      "correct_citation_count": 1,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "e5c72935263d-00034"
+      ],
+      "correct_cited_chunk_ids": [
+        "e5c72935263d-00034"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 9.172,
+      "error": "",
+      "response": "Organizations should follow their cyber incident response and communications plan to engage stakeholders, sharing available information and keeping management and senior leaders informed via regular updates [1]. They should report the incident to CISA, FBI, or local law enforcement, and coordinate with communications personnel to ensure accurate information is shared internally and externally [1]. If there's a data breach, notification requirements per the IRP must be followed [1]."
+    },
+    {
+      "id": "ret_062",
+      "group_id": "multi_gold_group_004",
+      "query": "What is required for notifying teams and stakeholders during a cyber incident?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "mixed",
+      "paraphrase_type": "natural",
+      "source": "StopRansomware-Guide 508.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Follow notification requirements as outlined in your cyber incident response and communications plan to engage internal and external teams and stakeholders",
+      "primary_gold_chunk_id": "e5c72935263d-00034",
+      "acceptable_gold_chunk_ids": [
+        "e5c72935263d-00034",
+        "6ca34d2a8b1c-00162",
+        "6ca34d2a8b1c-00161"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 3,
+      "correct_citation_count": 2,
+      "citation_precision": 0.6666666666666666,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "e5c72935263d-00034",
+        "6ca34d2a8b1c-00162",
+        "6ca34d2a8b1c-00163"
+      ],
+      "correct_cited_chunk_ids": [
+        "e5c72935263d-00034",
+        "6ca34d2a8b1c-00162"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 13.085,
+      "error": "",
+      "response": "Notifying teams and stakeholders during a cyber incident requires following the organization's incident response and communications plan, which includes engaging internal and external parties as outlined in the plan [1]. This involves sharing available information to receive timely assistance, keeping management and senior leaders informed with regular updates, and reporting the incident to relevant authorities such as CISA, FBI, or Secret Service [1]. Additionally, if a data breach occurs, notification requirements as specified in the incident response plan must be adhered to [1]. According to NIST SP 800-61r3, internal and external stakeholders must be notified of incidents, with procedures in place for what, when, and how to report, ensuring compliance with laws and regulations [3]. Information sharing with stakeholders should be secure and in line with the organization's response plans and information sharing agreements [4]."
+    },
+    {
+      "id": "ret_063",
+      "group_id": "multi_gold_group_005",
+      "query": "What incident response framework should organizations choose based on their needs?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "same_document",
+      "paraphrase_type": "lexical",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Organizations should use the incident response life cycle framework that best suits their needs.",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00035",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00035",
+        "6ca34d2a8b1c-00039"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered_partial",
+      "rounds": 3,
+      "fully_answered": 0,
+      "answer_produced": 1,
+      "grounded_success": 0,
+      "citation_count": 3,
+      "correct_citation_count": 1,
+      "citation_precision": 0.3333333333333333,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00035",
+        "17684aea55c3-00022",
+        "6ca34d2a8b1c-00105"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00035"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 25.064,
+      "error": "",
+      "response": "Organizations should choose an incident response framework that best suits their needs, such as the NIST Cybersecurity Framework (CSF) 2.0, which provides a common language and integrates with other risk management programs [1]. The CSF 2.0 is recommended for its alignment with cybersecurity risk management activities and its ability to complement existing frameworks like the NIST Risk Management Framework (RMF) [3]. Organizations should also consider integrating their incident response plans with business continuity plans and regularly update their cybersecurity plans based on their unique requirements [4]."
+    },
+    {
+      "id": "ret_064",
+      "group_id": "multi_gold_group_005",
+      "query": "Which incident response model is recommended for organizations to select according to their specific requirements?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "same_document",
+      "paraphrase_type": "semantic",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Organizations should use the incident response life cycle framework that best suits their needs.",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00035",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00035",
+        "6ca34d2a8b1c-00039"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 2,
+      "correct_citation_count": 1,
+      "citation_precision": 0.5,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00020",
+        "6ca34d2a8b1c-00035"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00035"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 12.007,
+      "error": "",
+      "response": "The incident response model recommended for organizations to select according to their specific requirements is the one based on the NIST Cybersecurity Framework (CSF) 2.0 Functions [1]. Organizations should use the incident response life cycle framework or model that suits them best [2]."
+    },
+    {
+      "id": "ret_065",
+      "group_id": "multi_gold_group_005",
+      "query": "What type of incident response framework is suitable for an organization to adopt?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "same_document",
+      "paraphrase_type": "natural",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Organizations should use the incident response life cycle framework that best suits their needs.",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00035",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00035",
+        "6ca34d2a8b1c-00039"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 2,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 4,
+      "correct_citation_count": 1,
+      "citation_precision": 0.25,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00012",
+        "6ca34d2a8b1c-00020",
+        "6ca34d2a8b1c-00035",
+        "6ca34d2a8b1c-00040"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00035"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 19.958,
+      "error": "",
+      "response": "The NIST Cybersecurity Framework (CSF) 2.0 is suitable for an organization to adopt as an incident response framework [1]. This framework integrates incident response across organizational operations and provides a structured approach to managing cybersecurity risks. The CSF 2.0 includes Functions such as Govern, Identify, Protect, Detect, Respond, and Recover, which are essential for effective incident response [2]. Organizations should use the incident response life cycle framework or model that best suits their needs, and the model in this document is based on CSF 2.0 to leverage available resources and support organizations already using the CSF [3]. Additionally, the CSF 2.0 Community Profile for Cyber Incident Risk Management offers a baseline of CSF outcomes tailored to reduce cybersecurity risks through prioritized incident response activities [4]."
+    },
+    {
+      "id": "ret_066",
+      "group_id": "multi_gold_group_006",
+      "query": "What is the purpose of analysis in incident response according to the CSF 2.0?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "mixed",
+      "paraphrase_type": "lexical",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "table",
+      "reference_answer": "Analysis is performed to establish what has taken place during an incident and the root cause of the incident.",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00157",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00157",
+        "17684aea55c3-00055",
+        "6ca34d2a8b1c-00156"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 2,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 2,
+      "correct_citation_count": 2,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00157",
+        "6ca34d2a8b1c-00156"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00157",
+        "6ca34d2a8b1c-00156"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 15.272,
+      "error": "",
+      "response": "The purpose of analysis in incident response according to the CSF 2.0 is to establish what has taken place during an incident and the root cause of the incident [1]. Additionally, it involves determining the sequence of events, identifying vulnerabilities, threats, and threat actors involved, analyzing for root causes, and checking cyber deception technology for attacker behavior information [1]. The analysis also supports forensics and recovery activities by investigating, documenting how and why the incident occurred [2]."
+    },
+    {
+      "id": "ret_067",
+      "group_id": "multi_gold_group_006",
+      "query": "How does the CSF 2.0 recommend identifying the cause of an incident?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "mixed",
+      "paraphrase_type": "semantic",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "table",
+      "reference_answer": "Analysis is performed to establish what has taken place during an incident and the root cause of the incident.",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00157",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00157",
+        "17684aea55c3-00055",
+        "6ca34d2a8b1c-00156"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 2,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 1,
+      "correct_citation_count": 1,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00157"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00157"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 16.065,
+      "error": "",
+      "response": "The CSF 2.0 recommends identifying the cause of an incident through analysis to establish what has taken place during an incident and the root cause of the incident [1]. It suggests determining the sequence of events, identifying vulnerabilities, threats, and threat actors involved, and analyzing the incident to find underlying root causes [1]. Additionally, it recommends checking deployed cyber deception technology for information on attacker behavior [1]."
+    },
+    {
+      "id": "ret_068",
+      "group_id": "multi_gold_group_006",
+      "query": "What should be done to understand the cause of an incident?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "mixed",
+      "paraphrase_type": "natural",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "table",
+      "reference_answer": "Analysis is performed to establish what has taken place during an incident and the root cause of the incident.",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00157",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00157",
+        "17684aea55c3-00055",
+        "6ca34d2a8b1c-00156"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 2,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 1,
+      "correct_citation_count": 1,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00157"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00157"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 14.748,
+      "error": "",
+      "response": "To understand the cause of an incident, the following steps should be taken: first, determine the sequence of events and identify the assets and resources involved [1]; second, identify vulnerabilities, threats, and threat actors involved in the incident [1]; third, analyze the incident to find the underlying root causes [1]; and finally, check deployed cyber deception technology for additional insights on attacker behavior [1]."
+    },
+    {
+      "id": "ret_069",
+      "group_id": "multi_gold_group_007",
+      "query": "What characterizes Tier 1: Partial in the CSF Tiers?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "same_document",
+      "paraphrase_type": "lexical",
+      "source": "NIST.CSWP.29.pdf",
+      "chunk_type": "table",
+      "reference_answer": "Tier 1: Partial describes an ad hoc approach to cybersecurity risk governance.",
+      "primary_gold_chunk_id": "17684aea55c3-00058",
+      "acceptable_gold_chunk_ids": [
+        "17684aea55c3-00058",
+        "17684aea55c3-00017"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 2,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 1,
+      "correct_citation_count": 1,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "17684aea55c3-00058"
+      ],
+      "correct_cited_chunk_ids": [
+        "17684aea55c3-00058"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 14.695,
+      "error": "",
+      "response": "Tier 1: Partial in the CSF is characterized by ad hoc management of organizational cybersecurity risk strategy, with prioritization not formally based on objectives or threat environment [1]. It also involves limited awareness of cybersecurity risks at the organizational level, implementing risk management on an irregular, case-by-case basis, and lacking processes for internal cybersecurity information sharing [1]. Additionally, the organization is generally unaware of the cybersecurity risks related to its suppliers and the products and services it uses [1]."
+    },
+    {
+      "id": "ret_070",
+      "group_id": "multi_gold_group_007",
+      "query": "How is cybersecurity risk governance handled under Tier 1 of the CSF?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "same_document",
+      "paraphrase_type": "semantic",
+      "source": "NIST.CSWP.29.pdf",
+      "chunk_type": "table",
+      "reference_answer": "Tier 1: Partial describes an ad hoc approach to cybersecurity risk governance.",
+      "primary_gold_chunk_id": "17684aea55c3-00058",
+      "acceptable_gold_chunk_ids": [
+        "17684aea55c3-00058",
+        "17684aea55c3-00017"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered_partial",
+      "rounds": 3,
+      "fully_answered": 0,
+      "answer_produced": 1,
+      "grounded_success": 0,
+      "citation_count": 1,
+      "correct_citation_count": 1,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "17684aea55c3-00058"
+      ],
+      "correct_cited_chunk_ids": [
+        "17684aea55c3-00058"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 25.466,
+      "error": "",
+      "response": "Under Tier 1 of the CSF, cybersecurity risk governance is characterized by ad hoc management of the organizational cybersecurity risk strategy [1]. The prioritization of risks is not formally based on objectives or the threat environment. Cybersecurity risk management is implemented on an irregular, case-by-case basis, with limited awareness of risks at the organizational level [1]. There is no formal process for sharing cybersecurity information within the organization, and the organization is generally unaware of the risks associated with suppliers and the products and services it uses [1]."
+    },
+    {
+      "id": "ret_071",
+      "group_id": "multi_gold_group_007",
+      "query": "What does the CSF Tier 1 description indicate about an organization's risk management practices?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "same_document",
+      "paraphrase_type": "natural",
+      "source": "NIST.CSWP.29.pdf",
+      "chunk_type": "table",
+      "reference_answer": "Tier 1: Partial describes an ad hoc approach to cybersecurity risk governance.",
+      "primary_gold_chunk_id": "17684aea55c3-00058",
+      "acceptable_gold_chunk_ids": [
+        "17684aea55c3-00058",
+        "17684aea55c3-00017"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 1,
+      "correct_citation_count": 1,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "17684aea55c3-00058"
+      ],
+      "correct_cited_chunk_ids": [
+        "17684aea55c3-00058"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 11.114,
+      "error": "",
+      "response": "The CSF Tier 1 description indicates that an organization's risk management practices are ad hoc and lack formal processes. Specifically, cybersecurity risk governance is managed in an ad hoc manner with prioritization not formally based on objectives or threat environment [3]. In terms of cybersecurity risk management, there is limited awareness of risks at the organizational level, and the organization implements risk management on an irregular, case-by-case basis. It may not have processes for sharing cybersecurity information internally, and it is generally unaware of risks associated with suppliers and acquired products/services [3]."
+    },
+    {
+      "id": "ret_072",
+      "group_id": "multi_gold_group_008",
+      "query": "What type of documents provide first steps for implementing the CSF?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "same_document",
+      "paraphrase_type": "lexical",
+      "source": "NIST.CSWP.29.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Quick-Start Guides (QSGs) are brief documents that help implement the CSF by providing actionable first steps.",
+      "primary_gold_chunk_id": "17684aea55c3-00018",
+      "acceptable_gold_chunk_ids": [
+        "17684aea55c3-00018",
+        "17684aea55c3-00007"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 1,
+      "correct_citation_count": 1,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "17684aea55c3-00018"
+      ],
+      "correct_cited_chunk_ids": [
+        "17684aea55c3-00018"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 9.503,
+      "error": "",
+      "response": "The type of documents that provide first steps for implementing the CSF are Quick-Start Guides (QSGs) [1]. These guides are brief documents on specific CSF-related topics and are often tailored to specific audiences. QSGs can help an organization implement the CSF because they distill specific portions of the CSF into actionable 'first steps' that an organization can consider on the path to improving their cybersecurity posture and management of associated risks [1]."
+    },
+    {
+      "id": "ret_073",
+      "group_id": "multi_gold_group_008",
+      "query": "How do QSGs assist organizations in adopting the CSF?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "same_document",
+      "paraphrase_type": "semantic",
+      "source": "NIST.CSWP.29.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Quick-Start Guides (QSGs) are brief documents that help implement the CSF by providing actionable first steps.",
+      "primary_gold_chunk_id": "17684aea55c3-00018",
+      "acceptable_gold_chunk_ids": [
+        "17684aea55c3-00018",
+        "17684aea55c3-00007"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 1,
+      "correct_citation_count": 1,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "17684aea55c3-00018"
+      ],
+      "correct_cited_chunk_ids": [
+        "17684aea55c3-00018"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 11.609,
+      "error": "",
+      "response": "QSGs assist organizations in adopting the CSF by providing actionable 'first steps' that distill specific portions of the CSF into practical guidance [2]. They help organizations implement the CSF by offering concise, action-oriented steps to achieve the outcomes of the Subcategories [2]. Additionally, QSGs are tailored to specific audiences and are revised independently, allowing for flexibility and ongoing relevance as organizations adapt the CSF to their unique needs [2]."
+    },
+    {
+      "id": "ret_074",
+      "group_id": "multi_gold_group_008",
+      "query": "What resources are available for initial CSF implementation?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "same_document",
+      "paraphrase_type": "natural",
+      "source": "NIST.CSWP.29.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Quick-Start Guides (QSGs) are brief documents that help implement the CSF by providing actionable first steps.",
+      "primary_gold_chunk_id": "17684aea55c3-00018",
+      "acceptable_gold_chunk_ids": [
+        "17684aea55c3-00018",
+        "17684aea55c3-00007"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 3,
+      "correct_citation_count": 2,
+      "citation_precision": 0.6666666666666666,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "17684aea55c3-00004",
+        "17684aea55c3-00018",
+        "17684aea55c3-00007"
+      ],
+      "correct_cited_chunk_ids": [
+        "17684aea55c3-00018",
+        "17684aea55c3-00007"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 9.162,
+      "error": "",
+      "response": "The resources available for initial CSF implementation include Quick Start Guides (QSGs) [1], Informative References, Implementation Examples, and Community Profiles [2]. Additional resources like templates and tools for automation are also provided [3]. The NIST CSF website hosts these materials, which are regularly updated [2]."
+    },
+    {
+      "id": "ret_075",
+      "group_id": "multi_gold_group_009",
+      "query": "What does federal asset response involve in terms of technical assistance?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "same_document",
+      "paraphrase_type": "lexical",
+      "source": "StopRansomware-Guide 508.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Federal asset response includes providing technical assistance to protect assets and mitigate vulnerabilities.",
+      "primary_gold_chunk_id": "e5c72935263d-00041",
+      "acceptable_gold_chunk_ids": [
+        "e5c72935263d-00041",
+        "e5c72935263d-00042"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered_partial",
+      "rounds": 3,
+      "fully_answered": 0,
+      "answer_produced": 1,
+      "grounded_success": 0,
+      "citation_count": 2,
+      "correct_citation_count": 1,
+      "citation_precision": 0.5,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "e5c72935263d-00041",
+        "e5c72935263d-00034"
+      ],
+      "correct_cited_chunk_ids": [
+        "e5c72935263d-00041"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 119.555,
+      "error": "",
+      "response": "Federal asset response involves furnishing technical assistance to affected entities to protect their assets, mitigate vulnerabilities, and reduce impacts of cyber incidents [1]. This includes identifying other entities at risk, assessing risks to the sector or region, developing mitigation strategies, facilitating information sharing, and providing guidance on utilizing federal resources for recovery [1]. Technical assistance may also involve sharing information with CISA, FBI, and other federal agencies for threat response and coordination [2]."
+    },
+    {
+      "id": "ret_076",
+      "group_id": "multi_gold_group_009",
+      "query": "How does the federal government assist organizations with cybersecurity incidents?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "same_document",
+      "paraphrase_type": "semantic",
+      "source": "StopRansomware-Guide 508.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Federal asset response includes providing technical assistance to protect assets and mitigate vulnerabilities.",
+      "primary_gold_chunk_id": "e5c72935263d-00041",
+      "acceptable_gold_chunk_ids": [
+        "e5c72935263d-00041",
+        "e5c72935263d-00042"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered_partial",
+      "rounds": 3,
+      "fully_answered": 0,
+      "answer_produced": 1,
+      "grounded_success": 0,
+      "citation_count": 2,
+      "correct_citation_count": 1,
+      "citation_precision": 0.5,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "e5c72935263d-00041",
+        "e5c72935263d-00006"
+      ],
+      "correct_cited_chunk_ids": [
+        "e5c72935263d-00041"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "medium",
+      "latency_s": 21.754,
+      "error": "",
+      "response": "The federal government assists organizations with cybersecurity incidents through several mechanisms. Federal asset response includes providing technical assistance to protect assets, mitigate vulnerabilities, and reduce impacts of cyber incidents [1]. CISA and MS-ISAC offer resources such as information sharing, assessments, and coordination with threat response [1]. Organizations can contact CISA at CISA.JCDC@cisa.dhs.gov or call (888) 282-0870 for collaboration on information sharing, best practices, assessments, and exercises [1]. Additionally, the FBI provides points of contact for cyber incidents [2]. The federal government also facilitates information sharing and operational coordination with threat response [1]."
+    },
+    {
+      "id": "ret_077",
+      "group_id": "multi_gold_group_009",
+      "query": "What is the role of federal agencies in responding to cyber incidents affecting organizations?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "same_document",
+      "paraphrase_type": "natural",
+      "source": "StopRansomware-Guide 508.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Federal asset response includes providing technical assistance to protect assets and mitigate vulnerabilities.",
+      "primary_gold_chunk_id": "e5c72935263d-00041",
+      "acceptable_gold_chunk_ids": [
+        "e5c72935263d-00041",
+        "e5c72935263d-00042"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered_partial",
+      "rounds": 3,
+      "fully_answered": 0,
+      "answer_produced": 1,
+      "grounded_success": 0,
+      "citation_count": 3,
+      "correct_citation_count": 1,
+      "citation_precision": 0.3333333333333333,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "e5c72935263d-00039",
+        "e5c72935263d-00041",
+        "e5c72935263d-00034"
+      ],
+      "correct_cited_chunk_ids": [
+        "e5c72935263d-00041"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 23.257,
+      "error": "",
+      "response": "Federal agencies play a role in responding to cyber incidents by undertaking threat response, asset response, and intelligence support [1]. They provide technical assistance to protect assets, mitigate vulnerabilities, and reduce impacts of cyber incidents, while also assessing risks to sectors or regions and developing mitigation strategies [2]. Additionally, federal agencies like CISA and the FBI offer guidance, resources, and assistance in mitigating, responding to, and recovering from cyber incidents [3]."
+    },
+    {
+      "id": "ret_078",
+      "group_id": "multi_gold_group_010",
+      "query": "What is required for an organization's cybersecurity incident response?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "cross_document",
+      "paraphrase_type": "lexical",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Organizations should have policies that govern their cybersecurity incident response",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00039",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00039",
+        "17684aea55c3-00049"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 5,
+      "correct_citation_count": 1,
+      "citation_precision": 0.2,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00039",
+        "6ca34d2a8b1c-00105",
+        "e5c72935263d-00010",
+        "6ca34d2a8b1c-00104",
+        "e5c72935263d-00009"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00039"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 12.508,
+      "error": "",
+      "response": "An organization's cybersecurity incident response requires documented policies and procedures [1], including incident response plans, vulnerability management plans, and business continuity plans [4]. These plans must be reviewed, updated, and exercised regularly [5]. The incident response plan should include communication procedures, notification protocols, and templates for holding statements [5]. Additionally, organizations must implement safeguards such as zero trust architecture to limit access and prevent unauthorized access [5]. Regular testing of backups and maintaining offline, encrypted backups of critical data is essential [9]. Furthermore, the incident response process should be integrated into the organization's overall cybersecurity risk management practices, with continuous improvements based on lessons learned from past incidents [7]."
+    },
+    {
+      "id": "ret_079",
+      "group_id": "multi_gold_group_010",
+      "query": "How should companies handle cybersecurity incidents according to the guidelines?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "cross_document",
+      "paraphrase_type": "semantic",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Organizations should have policies that govern their cybersecurity incident response",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00039",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00039",
+        "17684aea55c3-00049"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 3,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 0,
+      "citation_count": 4,
+      "correct_citation_count": 0,
+      "citation_precision": 0.0,
+      "citation_hit": 0,
+      "primary_citation_hit": 0,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00020",
+        "6ca34d2a8b1c-00162",
+        "17684aea55c3-00055",
+        "e5c72935263d-00010"
+      ],
+      "correct_cited_chunk_ids": [],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 20.833,
+      "error": "",
+      "response": "Companies should handle cybersecurity incidents by integrating incident response into their risk management practices, following the NIST Cybersecurity Framework (CSF) 2.0 Functions, and using an incident response life cycle framework [1]. They must coordinate with internal and external stakeholders, ensuring notifications are made according to laws and regulations [2]. Incident management involves executing the incident response plan, triaging, categorizing, and escalating incidents [3]. Companies should also create and regularly exercise a cyber incident response plan (IRP) with communication procedures, including data breach notifications [4]. Effective incident response includes mitigating the incident's impact, containing, and eradicating threats [3]."
+    },
+    {
+      "id": "ret_080",
+      "group_id": "multi_gold_group_010",
+      "query": "What must organizations establish to manage cybersecurity incidents effectively?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "cross_document",
+      "paraphrase_type": "natural",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Organizations should have policies that govern their cybersecurity incident response",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00039",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00039",
+        "17684aea55c3-00049"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 3,
+      "correct_citation_count": 1,
+      "citation_precision": 0.3333333333333333,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00039",
+        "6ca34d2a8b1c-00105",
+        "17684aea55c3-00055"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00039"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 12.02,
+      "error": "",
+      "response": "Organizations must establish incident response plans and other cybersecurity plans that affect operations, which should be communicated, maintained, and improved [3]. These plans include incident response plans, vulnerability management plans, and business continuity plans, which need to be synchronized and updated periodically [3]. Additionally, organizations must have policies governing their cybersecurity incident response, including definitions, roles, responsibilities, and procedures for prioritizing incidents and initiating recovery processes [2]. They should also develop procedures for important processes, such as redeploying critical systems, and use playbooks to document actionable steps for various scenarios [2]. Furthermore, organizations must execute their incident response plan in coordination with third parties, triage and validate incident reports, categorize and prioritize incidents, escalate as needed, and apply criteria for initiating recovery [4]."
+    },
+    {
+      "id": "ret_081",
+      "group_id": "multi_gold_group_011",
+      "query": "What does the ID.RA CSF element focus on?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "cross_document",
+      "paraphrase_type": "lexical",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "table",
+      "reference_answer": "The CSF element ID.RA focuses on understanding the organization's cybersecurity risk.",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00090",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00090",
+        "17684aea55c3-00051"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 2,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 1,
+      "correct_citation_count": 1,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 0,
+      "cited_chunk_ids": [
+        "17684aea55c3-00051"
+      ],
+      "correct_cited_chunk_ids": [
+        "17684aea55c3-00051"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 15.548,
+      "error": "",
+      "response": "The ID.RA CSF element focuses on understanding the cybersecurity risk to the organization, assets, and individuals [1]. It involves identifying and recording vulnerabilities in assets, receiving cyber threat intelligence, identifying threats, and assessing potential impacts and likelihoods of threats exploiting vulnerabilities [1]."
+    },
+    {
+      "id": "ret_082",
+      "group_id": "multi_gold_group_011",
+      "query": "What is the main goal of the ID.RA CSF element?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "cross_document",
+      "paraphrase_type": "semantic",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "table",
+      "reference_answer": "The CSF element ID.RA focuses on understanding the organization's cybersecurity risk.",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00090",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00090",
+        "17684aea55c3-00051"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered_partial",
+      "rounds": 3,
+      "fully_answered": 0,
+      "answer_produced": 1,
+      "grounded_success": 0,
+      "citation_count": 1,
+      "correct_citation_count": 1,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00090"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00090"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 22.257,
+      "error": "",
+      "response": "The main goal of the ID.RA CSF element is to ensure that the cybersecurity risk to the organization, assets, and individuals is understood [1]."
+    },
+    {
+      "id": "ret_083",
+      "group_id": "multi_gold_group_011",
+      "query": "What is the purpose of the ID.RA in the CSF?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "cross_document",
+      "paraphrase_type": "natural",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "table",
+      "reference_answer": "The CSF element ID.RA focuses on understanding the organization's cybersecurity risk.",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00090",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00090",
+        "17684aea55c3-00051"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 1,
+      "correct_citation_count": 1,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 0,
+      "cited_chunk_ids": [
+        "17684aea55c3-00051"
+      ],
+      "correct_cited_chunk_ids": [
+        "17684aea55c3-00051"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 9.95,
+      "error": "",
+      "response": "The purpose of ID.RA in the CSF is to ensure the organization understands its cybersecurity risks, including identifying vulnerabilities, threats, and potential impacts, and using this information to prioritize risk responses [1]."
+    },
+    {
+      "id": "ret_084",
+      "group_id": "multi_gold_group_012",
+      "query": "What is integrated into cybersecurity and enterprise risk management, risk assessment, and improvement processes?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "mixed",
+      "paraphrase_type": "lexical",
+      "source": "NIST.CSWP.29.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Cybersecurity supply chain risk management is integrated into cybersecurity and enterprise risk management, risk assessment, and improvement processes.",
+      "primary_gold_chunk_id": "17684aea55c3-00049",
+      "acceptable_gold_chunk_ids": [
+        "17684aea55c3-00049",
+        "6ca34d2a8b1c-00073",
+        "6ca34d2a8b1c-00079"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 2,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 5,
+      "correct_citation_count": 1,
+      "citation_precision": 0.2,
+      "citation_hit": 1,
+      "primary_citation_hit": 0,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00073",
+        "17684aea55c3-00022",
+        "17684aea55c3-00023",
+        "6ca34d2a8b1c-00053",
+        "17684aea55c3-00024"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00073"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 19.816,
+      "error": "",
+      "response": "Cybersecurity supply chain risk management is integrated into cybersecurity and enterprise risk management, risk assessment, and improvement processes [1]. Cybersecurity risk management activities and outcomes are included in enterprise risk management processes [4]. The CSF can be integrated with established cybersecurity risk management and assessment programs, such as SP 800-37 and SP 800-30 [2]. The NIST Privacy Framework and Cybersecurity Framework can be used together to address different aspects of cybersecurity and privacy risks [3]. Cybersecurity Supply Chain Risk Management (C-SCRM) practices are provided in SP 800-161r1 [3]. The NIST Artificial Intelligence Risk Management Framework (AI RMF) helps address risks from emerging technologies like AI by treating them alongside other enterprise risks [5]."
+    },
+    {
+      "id": "ret_085",
+      "group_id": "multi_gold_group_012",
+      "query": "How is cybersecurity supply chain risk management incorporated into risk management and improvement processes?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "mixed",
+      "paraphrase_type": "semantic",
+      "source": "NIST.CSWP.29.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Cybersecurity supply chain risk management is integrated into cybersecurity and enterprise risk management, risk assessment, and improvement processes.",
+      "primary_gold_chunk_id": "17684aea55c3-00049",
+      "acceptable_gold_chunk_ids": [
+        "17684aea55c3-00049",
+        "6ca34d2a8b1c-00073",
+        "6ca34d2a8b1c-00079"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 3,
+      "correct_citation_count": 2,
+      "citation_precision": 0.6666666666666666,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "17684aea55c3-00049",
+        "6ca34d2a8b1c-00073",
+        "17684aea55c3-00050"
+      ],
+      "correct_cited_chunk_ids": [
+        "17684aea55c3-00049",
+        "6ca34d2a8b1c-00073"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 11.216,
+      "error": "",
+      "response": "Cybersecurity supply chain risk management is incorporated into risk management and improvement processes through several key mechanisms [1]. First, it is integrated into cybersecurity and enterprise risk management, risk assessment, and improvement processes [2]. Second, planning and due diligence are performed to reduce risks before entering into formal supplier or third-party relationships [3]. Third, the risks posed by suppliers, their products, and services are understood, recorded, prioritized, assessed, responded to, and monitored throughout the relationship [3]. Additionally, supply chain security practices are integrated into cybersecurity and enterprise risk management programs, with performance monitored throughout the technology product and service lifecycle [3]. Finally, cybersecurity supply chain risk management plans include provisions for activities after the conclusion of a partnership or service agreement [3]."
+    },
+    {
+      "id": "ret_086",
+      "group_id": "multi_gold_group_012",
+      "query": "Which processes are cybersecurity supply chain risk management integrated into?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "mixed",
+      "paraphrase_type": "natural",
+      "source": "NIST.CSWP.29.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Cybersecurity supply chain risk management is integrated into cybersecurity and enterprise risk management, risk assessment, and improvement processes.",
+      "primary_gold_chunk_id": "17684aea55c3-00049",
+      "acceptable_gold_chunk_ids": [
+        "17684aea55c3-00049",
+        "6ca34d2a8b1c-00073",
+        "6ca34d2a8b1c-00079"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 2,
+      "correct_citation_count": 1,
+      "citation_precision": 0.5,
+      "citation_hit": 1,
+      "primary_citation_hit": 0,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00073",
+        "17684aea55c3-00050"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00073"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 8.292,
+      "error": "",
+      "response": "Cybersecurity supply chain risk management is integrated into cybersecurity and enterprise risk management, risk assessment, and improvement processes [1]. Additionally, it is integrated into cybersecurity and enterprise risk management programs, and their performance is monitored throughout the technology product and service life cycle [3]."
+    },
+    {
+      "id": "ret_087",
+      "group_id": "multi_gold_group_013",
+      "query": "What is a sign of unexpected PowerShell execution according to the guide?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "same_document",
+      "paraphrase_type": "lexical",
+      "source": "StopRansomware-Guide 508.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Signs of unexpected PowerShell execution or use of PsTools suite are potential indicators of malicious activity.",
+      "primary_gold_chunk_id": "e5c72935263d-00032",
+      "acceptable_gold_chunk_ids": [
+        "e5c72935263d-00032",
+        "e5c72935263d-00031"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 2,
+      "correct_citation_count": 2,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "e5c72935263d-00032",
+        "e5c72935263d-00031"
+      ],
+      "correct_cited_chunk_ids": [
+        "e5c72935263d-00032",
+        "e5c72935263d-00031"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 7.724,
+      "error": "",
+      "response": "A sign of unexpected PowerShell execution according to the guide is [1] any unexpected PowerShell execution or use of PsTools suite. Additionally, [2] any unexpected PowerShell execution or use of PsTools suite is noted as a sign."
+    },
+    {
+      "id": "ret_088",
+      "group_id": "multi_gold_group_013",
+      "query": "What indicates potential malicious activity related to PsTools suite usage?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "same_document",
+      "paraphrase_type": "semantic",
+      "source": "StopRansomware-Guide 508.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Signs of unexpected PowerShell execution or use of PsTools suite are potential indicators of malicious activity.",
+      "primary_gold_chunk_id": "e5c72935263d-00032",
+      "acceptable_gold_chunk_ids": [
+        "e5c72935263d-00032",
+        "e5c72935263d-00031"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 1,
+      "correct_citation_count": 1,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "e5c72935263d-00032"
+      ],
+      "correct_cited_chunk_ids": [
+        "e5c72935263d-00032"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 9.672,
+      "error": "",
+      "response": "Potential malicious activity related to PsTools suite usage is indicated by any unexpected PowerShell execution or use of PsTools suite [1]."
+    },
+    {
+      "id": "ret_089",
+      "group_id": "multi_gold_group_013",
+      "query": "What should be monitored for signs of unauthorized activity?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "same_document",
+      "paraphrase_type": "natural",
+      "source": "StopRansomware-Guide 508.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Signs of unexpected PowerShell execution or use of PsTools suite are potential indicators of malicious activity.",
+      "primary_gold_chunk_id": "e5c72935263d-00032",
+      "acceptable_gold_chunk_ids": [
+        "e5c72935263d-00032",
+        "e5c72935263d-00031"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 6,
+      "correct_citation_count": 1,
+      "citation_precision": 0.16666666666666666,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00136",
+        "17684aea55c3-00054",
+        "6ca34d2a8b1c-00141",
+        "6ca34d2a8b1c-00140",
+        "6ca34d2a8b1c-00138",
+        "e5c72935263d-00032"
+      ],
+      "correct_cited_chunk_ids": [
+        "e5c72935263d-00032"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 11.416,
+      "error": "",
+      "response": "The following should be monitored for signs of unauthorized activity: networks and network services [1], computing hardware and software, runtime environments, and their data [3], the physical environment [8], personnel activity and technology usage [2], external service provider activities [7], and endpoints for cyber health issues [3]. Additionally, monitoring should include email, web, file sharing, and collaboration services to detect malware, phishing, data leaks, and exfiltration [3]. Continuous monitoring technologies should be tuned to reduce false positives and negatives [1]. Indicators of activity, such as unexpected RMM software usage, PowerShell execution, or data exfiltration, should also be monitored [9]."
+    },
+    {
+      "id": "ret_090",
+      "group_id": "multi_gold_group_014",
+      "query": "What is the identifier for the incident response control that involves categorizing and prioritizing incidents?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "cross_document",
+      "paraphrase_type": "lexical",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "table",
+      "reference_answer": "RS.MA-03: Incidents are categorized and prioritized",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00153",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00153",
+        "17684aea55c3-00055"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 1,
+      "correct_citation_count": 1,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00153"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00153"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 6.642,
+      "error": "",
+      "response": "The identifier for the incident response control that involves categorizing and prioritizing incidents is RS.MA-03 [1]."
+    },
+    {
+      "id": "ret_091",
+      "group_id": "multi_gold_group_014",
+      "query": "Which control in the incident response process focuses on classifying and prioritizing security events?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "cross_document",
+      "paraphrase_type": "semantic",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "table",
+      "reference_answer": "RS.MA-03: Incidents are categorized and prioritized",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00153",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00153",
+        "17684aea55c3-00055"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 2,
+      "correct_citation_count": 1,
+      "citation_precision": 0.5,
+      "citation_hit": 1,
+      "primary_citation_hit": 0,
+      "cited_chunk_ids": [
+        "17684aea55c3-00055",
+        "6ca34d2a8b1c-00150"
+      ],
+      "correct_cited_chunk_ids": [
+        "17684aea55c3-00055"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 10.584,
+      "error": "",
+      "response": "The control in the incident response process that focuses on classifying and prioritizing security events is RS.MA-03 [1]. According to the NIST Cybersecurity Framework, this control involves categorizing and prioritizing incidents [1]. Additionally, the NIST SP 800-61r3 highlights the importance of incident triage, prioritization, escalation, and elevation based on risk evaluation factors [2]."
+    },
+    {
+      "id": "ret_092",
+      "group_id": "multi_gold_group_014",
+      "query": "What control ensures that incidents are classified and ranked based on their severity?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "cross_document",
+      "paraphrase_type": "natural",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "table",
+      "reference_answer": "RS.MA-03: Incidents are categorized and prioritized",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00153",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00153",
+        "17684aea55c3-00055"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 2,
+      "correct_citation_count": 1,
+      "citation_precision": 0.5,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00153",
+        "6ca34d2a8b1c-00150"
+      ],
+      "correct_cited_chunk_ids": [
+        "6ca34d2a8b1c-00153"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 10.174,
+      "error": "",
+      "response": "The control that ensures incidents are classified and ranked based on their severity is RS.MA-03 [1]. This control focuses on categorizing and prioritizing incidents, with recommendations to prioritize response based on factors such as scope, impact, and time-criticality [1]. Additionally, incident management (RS.MA) emphasizes evaluating overall risk and applying appropriate prioritization, which includes factors like asset criticality, functional impact, and data impact [2]."
+    },
+    {
+      "id": "ret_093",
+      "group_id": "multi_gold_group_015",
+      "query": "What does GV.SC-07 in the NIST CSF entail?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "same_document",
+      "paraphrase_type": "lexical",
+      "source": "NIST.CSWP.29.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "The NIST CSF includes GV.SC-07, which involves understanding and monitoring risks from suppliers and third parties.",
+      "primary_gold_chunk_id": "17684aea55c3-00050",
+      "acceptable_gold_chunk_ids": [
+        "17684aea55c3-00050",
+        "17684aea55c3-00049"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 2,
+      "correct_citation_count": 2,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "17684aea55c3-00050",
+        "17684aea55c3-00049"
+      ],
+      "correct_cited_chunk_ids": [
+        "17684aea55c3-00050",
+        "17684aea55c3-00049"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 9.354,
+      "error": "",
+      "response": "GV.SC-07 in the NIST Cybersecurity Framework entails that the risks posed by a supplier, their products and services, and other third parties are understood, recorded, prioritized, assessed, responded to, and monitored over the course of the relationship [1]. This is part of the Cybersecurity Supply Chain Risk Management (GV.SC) category, which includes processes for identifying, establishing, managing, monitoring, and improving supply chain risk management by organizational stakeholders [2]."
+    },
+    {
+      "id": "ret_094",
+      "group_id": "multi_gold_group_015",
+      "query": "Which CSF component addresses supplier risk management?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "same_document",
+      "paraphrase_type": "semantic",
+      "source": "NIST.CSWP.29.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "The NIST CSF includes GV.SC-07, which involves understanding and monitoring risks from suppliers and third parties.",
+      "primary_gold_chunk_id": "17684aea55c3-00050",
+      "acceptable_gold_chunk_ids": [
+        "17684aea55c3-00050",
+        "17684aea55c3-00049"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered_partial",
+      "rounds": 3,
+      "fully_answered": 0,
+      "answer_produced": 1,
+      "grounded_success": 0,
+      "citation_count": 1,
+      "correct_citation_count": 1,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 0,
+      "cited_chunk_ids": [
+        "17684aea55c3-00049"
+      ],
+      "correct_cited_chunk_ids": [
+        "17684aea55c3-00049"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 23.854,
+      "error": "",
+      "response": "The Cybersecurity Supply Chain Risk Management (GV.SC) component of the CSF addresses supplier risk management [3]. This component includes subcategories such as GV.SC-01, GV.SC-02, and GV.SC-05, which focus on establishing a supply chain risk management program, defining roles and responsibilities for suppliers, and integrating cybersecurity risk requirements into contracts with suppliers [3]."
+    },
+    {
+      "id": "ret_095",
+      "group_id": "multi_gold_group_015",
+      "query": "What NIST CSF guideline covers monitoring third-party risks?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "same_document",
+      "paraphrase_type": "natural",
+      "source": "NIST.CSWP.29.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "The NIST CSF includes GV.SC-07, which involves understanding and monitoring risks from suppliers and third parties.",
+      "primary_gold_chunk_id": "17684aea55c3-00050",
+      "acceptable_gold_chunk_ids": [
+        "17684aea55c3-00050",
+        "17684aea55c3-00049"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered_partial",
+      "rounds": 3,
+      "fully_answered": 0,
+      "answer_produced": 1,
+      "grounded_success": 0,
+      "citation_count": 2,
+      "correct_citation_count": 1,
+      "citation_precision": 0.5,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "6ca34d2a8b1c-00077",
+        "17684aea55c3-00050"
+      ],
+      "correct_cited_chunk_ids": [
+        "17684aea55c3-00050"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 19.194,
+      "error": "",
+      "response": "The NIST Cybersecurity Framework guideline that covers monitoring third-party risks is GV.SC-07 [2]. This guideline emphasizes understanding, recording, prioritizing, assessing, responding to, and monitoring risks from suppliers, their products and services, and other third parties throughout the relationship [1]."
+    },
+    {
+      "id": "ret_096",
+      "group_id": "multi_gold_group_016",
+      "query": "What action can be taken against a new firewall rule allowing open traffic (0.0.0.0/0)?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "cross_document",
+      "paraphrase_type": "lexical",
+      "source": "StopRansomware-Guide 508.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Automated actions can be taken to disable or delete a new firewall rule that allows open traffic (0.0.0.0/0).",
+      "primary_gold_chunk_id": "e5c72935263d-00033",
+      "acceptable_gold_chunk_ids": [
+        "e5c72935263d-00033",
+        "6ca34d2a8b1c-00165"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 1,
+      "correct_citation_count": 1,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "e5c72935263d-00033"
+      ],
+      "correct_cited_chunk_ids": [
+        "e5c72935263d-00033"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 7.945,
+      "error": "",
+      "response": "An automated action can be taken to disable or delete the new firewall rule allowing open traffic (0.0.0.0/0) [1]."
+    },
+    {
+      "id": "ret_097",
+      "group_id": "multi_gold_group_016",
+      "query": "How should an organization respond to a newly created firewall rule that permits unrestricted network access?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "cross_document",
+      "paraphrase_type": "semantic",
+      "source": "StopRansomware-Guide 508.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Automated actions can be taken to disable or delete a new firewall rule that allows open traffic (0.0.0.0/0).",
+      "primary_gold_chunk_id": "e5c72935263d-00033",
+      "acceptable_gold_chunk_ids": [
+        "e5c72935263d-00033",
+        "6ca34d2a8b1c-00165"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 2,
+      "correct_citation_count": 1,
+      "citation_precision": 0.5,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "e5c72935263d-00033",
+        "e5c72935263d-00010"
+      ],
+      "correct_cited_chunk_ids": [
+        "e5c72935263d-00033"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "medium",
+      "latency_s": 11.917,
+      "error": "",
+      "response": "An organization should respond to a newly created firewall rule that permits unrestricted network access by implementing automated detection and response mechanisms. According to the evidence, automation should be used to detect such changes and take immediate actions, such as disabling or deleting the rule and notifying the relevant parties [1]. Additionally, the organization should ensure that their incident response plan includes procedures for handling such security events, as outlined in the StopRansomware Guide, which emphasizes creating and maintaining a cyber incident response plan [3]. Furthermore, the organization should consider implementing a zero trust architecture to minimize unauthorized access and ensure that access controls are as granular as possible [3]."
+    },
+    {
+      "id": "ret_098",
+      "group_id": "multi_gold_group_016",
+      "query": "What is the recommended procedure for handling a firewall rule that allows traffic from any IP address?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "cross_document",
+      "paraphrase_type": "natural",
+      "source": "StopRansomware-Guide 508.pdf",
+      "chunk_type": "paragraph",
+      "reference_answer": "Automated actions can be taken to disable or delete a new firewall rule that allows open traffic (0.0.0.0/0).",
+      "primary_gold_chunk_id": "e5c72935263d-00033",
+      "acceptable_gold_chunk_ids": [
+        "e5c72935263d-00033",
+        "6ca34d2a8b1c-00165"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 1,
+      "correct_citation_count": 1,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 1,
+      "cited_chunk_ids": [
+        "e5c72935263d-00033"
+      ],
+      "correct_cited_chunk_ids": [
+        "e5c72935263d-00033"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 9.118,
+      "error": "",
+      "response": "The recommended procedure for handling a firewall rule that allows traffic from any IP address is to use automation to detect such rules and take automated actions, such as disabling or deleting the rule and notifying the user and security team [1]."
+    },
+    {
+      "id": "ret_099",
+      "group_id": "multi_gold_group_017",
+      "query": "How should access to assets be controlled according to the guidelines?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "cross_document",
+      "paraphrase_type": "semantic",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "table",
+      "reference_answer": "Access to physical and logical assets is limited to authorized users, services, and hardware and managed commensurate with the assessed risk of unauthorized access",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00107",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00107",
+        "17684aea55c3-00052"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 1,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 2,
+      "correct_citation_count": 1,
+      "citation_precision": 0.5,
+      "citation_hit": 1,
+      "primary_citation_hit": 0,
+      "cited_chunk_ids": [
+        "17684aea55c3-00052",
+        "e5c72935263d-00024"
+      ],
+      "correct_cited_chunk_ids": [
+        "17684aea55c3-00052"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 10.16,
+      "error": "",
+      "response": "Access to assets should be controlled by limiting access to authorized users, services, and hardware, managed in accordance with the assessed risk of unauthorized access [1]. This includes managing identities and credentials, authenticating users and services, protecting identity assertions, defining access permissions with least privilege and separation of duties, and managing physical access to assets [1]. Additionally, the principle of least privilege should be applied to all systems and services, restricting user permissions to only what is necessary for their job roles [4]."
+    },
+    {
+      "id": "ret_100",
+      "group_id": "multi_gold_group_017",
+      "query": "What does PR.AA aim to achieve in terms of access control?",
+      "gold_multiplicity": "multi_gold",
+      "duplication_scope": "cross_document",
+      "paraphrase_type": "natural",
+      "source": "NIST.SP.800-61r3.pdf",
+      "chunk_type": "table",
+      "reference_answer": "Access to physical and logical assets is limited to authorized users, services, and hardware and managed commensurate with the assessed risk of unauthorized access",
+      "primary_gold_chunk_id": "6ca34d2a8b1c-00107",
+      "acceptable_gold_chunk_ids": [
+        "6ca34d2a8b1c-00107",
+        "17684aea55c3-00052"
+      ],
+      "actual_category": "in_scope",
+      "status": "answered",
+      "rounds": 2,
+      "fully_answered": 1,
+      "answer_produced": 1,
+      "grounded_success": 1,
+      "citation_count": 1,
+      "correct_citation_count": 1,
+      "citation_precision": 1.0,
+      "citation_hit": 1,
+      "primary_citation_hit": 0,
+      "cited_chunk_ids": [
+        "17684aea55c3-00052"
+      ],
+      "correct_cited_chunk_ids": [
+        "17684aea55c3-00052"
+      ],
+      "citation_integrity": 1,
+      "dropped_markers": [],
+      "confidence": "high",
+      "latency_s": 13.236,
+      "error": "",
+      "response": "PR.AA aims to achieve access control by limiting access to physical and logical assets to authorized users, services, and hardware, managed commensurate with the assessed risk of unauthorized access [1]. It includes managing identities and credentials, authenticating users and hardware, protecting identity assertions, defining access permissions with least privilege and separation of duties, and managing physical access to assets [1]."
+    }
+  ]
+}
