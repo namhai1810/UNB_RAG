@@ -41,6 +41,9 @@ class Settings(BaseSettings):
     openai_api_key: str = "EMPTY"          # vLLM ignores the value but requires one
     openai_base_url: str = "http://0.0.0.0:8000/v1"
     openai_model: str = "Qwen/Qwen3-8B"
+    # Forwarded to OpenAI-compatible servers such as vLLM. Qwen3 baselines use
+    # {"enable_thinking": false} for concise structured agent responses.
+    openai_chat_template_kwargs: dict[str, object] = Field(default_factory=dict)
 
     llm_max_tokens: int = 4096
     llm_temperature: float = 0.0
@@ -58,6 +61,9 @@ class Settings(BaseSettings):
     # ------------------------------------------------------------ embedding
     embedding_model: str = "BAAI/bge-m3"
     embedding_dim: int = 1024
+    # Instruction-aware encoders such as Qwen3-Embedding expose a named query
+    # prompt. Leave unset for symmetric encoders such as BGE-M3.
+    embedding_query_prompt_name: str | None = None
     reranker_model: str = "BAAI/bge-reranker-v2-m3"
     device: str = "cuda"                    # "cuda", "cuda:1" or "cpu"
     embedding_batch_size: int = 8

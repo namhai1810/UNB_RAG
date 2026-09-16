@@ -9,6 +9,7 @@ from __future__ import annotations
 import pytest
 from pydantic import BaseModel
 
+from src.config import settings
 from src.llm.base import LLMError
 from src.llm.openai_provider import OpenAIProvider
 
@@ -66,7 +67,7 @@ def provider(monkeypatch):
 def _mode_of(call: dict) -> str:
     if "response_format" in call:
         return "json_schema"
-    if "extra_body" in call:
+    if "guided_json" in call.get("extra_body", {}):
         return "guided_json"
     return "prompt"
 
@@ -175,3 +176,13 @@ def test_all_modes_failing_raises_with_the_endpoint(provider):
     p = provider(handler)
     with pytest.raises(LLMError, match="http://fake/v1"):
         p.structured("s", "u", Answer)
+
+
+def test_chat_template_kwargs_are_forwarded_with_json_schema(provider, monkeypatch):
+    monkeypatch.setattr(settings, "openai_chat_template_kwargs", {"enable_thinking": False})
+    p = provider(lambda kw: _response('{"label": "fast", "score": 9}'))
+
+    assert p.structured("s", "u", Answer).label == "fast"
+    call = p.completions.calls[0]
+    assert _mode_of(call) == "json_schema"
+    assert call["extra_body"]["chat_template_kwargs"] == {"enable_thinking": False}

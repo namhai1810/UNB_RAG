@@ -123,6 +123,7 @@ def evaluate_dataset(dataset: dict, retriever: HybridRetriever, ks: list[int]) -
             "group_count": len({case["group_id"] for case in cases}),
             "k_values": ks,
             "embedding_model": settings.embedding_model,
+            "embedding_query_prompt_name": settings.embedding_query_prompt_name,
             "reranker_model": settings.reranker_model,
             "device": settings.device,
             "corpus_sha256": dataset["metadata"].get("corpus_sha256", "unknown"),
@@ -201,7 +202,8 @@ Generated at: `{payload['created_at']}`
 
 - Test cases: **{config['case_count']}** from **{config['group_count']}** atomic facts
 - Dataset schema: **{config['dataset_schema_version']}**
-- Retrieval: hybrid BGE-M3 + BM25/RRF, followed by `{config['reranker_model']}`
+- Retrieval: hybrid `{config['embedding_model']}` + BM25/RRF, followed by `{config['reranker_model']}`
+- Embedding query prompt: `{config.get('embedding_query_prompt_name') or 'none'}`
 - Evaluated list: reranked seed chunks only; neighbor expansion is excluded
 - K values: `{', '.join(map(str, ks))}`
 - Device: `{config['device']}`

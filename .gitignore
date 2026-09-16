@@ -6,5 +6,6 @@ evaluation/results.csv
 .pytest_cache/
 logs/
 *.json
+!evaluation/baselines.json
 !test_case_generation/generated_retrieval_test_cases.json
 *.orig

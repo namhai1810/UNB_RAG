@@ -164,7 +164,11 @@ def build_payload(dataset: dict, rows: list[dict]) -> dict:
             "dataset_schema_version": dataset["metadata"].get("schema_version", "unknown"),
             "llm_provider": settings.llm_provider,
             "llm_model": settings.anthropic_model if settings.is_anthropic else settings.openai_model,
+            "openai_chat_template_kwargs": (
+                settings.openai_chat_template_kwargs if not settings.is_anthropic else {}
+            ),
             "embedding_model": settings.embedding_model,
+            "embedding_query_prompt_name": settings.embedding_query_prompt_name,
             "reranker_model": settings.reranker_model,
             "device": settings.device,
             "max_retrieval_rounds": settings.max_retrieval_rounds,
@@ -172,6 +176,24 @@ def build_payload(dataset: dict, rows: list[dict]) -> dict:
         "summary": summarise(rows),
         "results": rows,
     }
+
+
+_RESUME_CONFIG_KEYS = (
+    "dataset_schema_version",
+    "corpus_sha256",
+    "llm_provider",
+    "llm_model",
+    "openai_chat_template_kwargs",
+    "embedding_model",
+    "embedding_query_prompt_name",
+    "reranker_model",
+    "max_retrieval_rounds",
+)
+
+
+def resume_config_matches(previous: dict, current: dict) -> bool:
+    """Only reuse rows produced by the exact model and retrieval configuration."""
+    return all(previous.get(key) == current.get(key) for key in _RESUME_CONFIG_KEYS)
 
 
 def _pct(value: float) -> str:
@@ -359,10 +381,8 @@ def main() -> int:
     if args.resume and args.details.exists():
         previous = json.loads(args.details.read_text(encoding="utf-8"))
         previous_config = previous.get("config", {})
-        if (
-            previous_config.get("dataset_schema_version") == "2.0"
-            and previous_config.get("corpus_sha256") == dataset["metadata"]["corpus_sha256"]
-        ):
+        current_config = build_payload(dataset, [])["config"]
+        if resume_config_matches(previous_config, current_config):
             rows_by_id = {row["id"]: row for row in previous.get("results", [])}
 
     args.details.parent.mkdir(parents=True, exist_ok=True)

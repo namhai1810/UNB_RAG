@@ -108,15 +108,20 @@ class OpenAIProvider(LLMProvider):
             user=payload(user),
         )
         try:
-            response = self.client.chat.completions.create(
-                model=self.model,
-                max_tokens=settings.llm_max_tokens,
-                temperature=settings.llm_temperature,
-                messages=[
+            kwargs: dict = {
+                "model": self.model,
+                "max_tokens": settings.llm_max_tokens,
+                "temperature": settings.llm_temperature,
+                "messages": [
                     {"role": "system", "content": system},
                     {"role": "user", "content": user},
                 ],
-            )
+            }
+            if settings.openai_chat_template_kwargs:
+                kwargs["extra_body"] = {
+                    "chat_template_kwargs": settings.openai_chat_template_kwargs
+                }
+            response = self.client.chat.completions.create(**kwargs)
         except Exception:
             log.exception(
                 "llm.error | provider=%s model=%s call_type=text",
@@ -288,6 +293,9 @@ class OpenAIProvider(LLMProvider):
         }
         self._last_usage = {}
         self._last_finish_reason = None
+        extra_body: dict = {}
+        if settings.openai_chat_template_kwargs:
+            extra_body["chat_template_kwargs"] = settings.openai_chat_template_kwargs
         if mode == "json_schema":
             kwargs["response_format"] = {
                 "type": "json_schema",
@@ -298,10 +306,12 @@ class OpenAIProvider(LLMProvider):
                 },
             }
         elif mode == "guided_json":
-            kwargs["extra_body"] = {"guided_json": json_schema}
+            extra_body["guided_json"] = json_schema
         else:
             system = system + json_instructions(schema)
 
+        if extra_body:
+            kwargs["extra_body"] = extra_body
         kwargs["messages"] = [
             {"role": "system", "content": system},
             {"role": "user", "content": user},

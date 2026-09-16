@@ -246,12 +246,33 @@ it reports answer outcomes, latency, retrieval metrics, and citation correctness
 Citation correctness accepts a citation to any fully supporting gold chunk, not
 only the chunk from which the question was originally generated.
 
-The two maintained Markdown artifacts are:
+The maintained Markdown artifacts are:
 
 - [`evaluation/retrieval_evaluation.md`](evaluation/retrieval_evaluation.md):
   retrieval and end-to-end results.
 - [`test_case_generation/README.md`](test_case_generation/README.md):
   how the test dataset was constructed and audited.
+
+The baseline matrix is defined in
+[`evaluation/baselines.json`](evaluation/baselines.json). It compares
+Qwen2.5-7B-Instruct, Qwen3-8B, Qwen3-14B, and the current
+Qwen3-30B-A3B-AWQ while holding retrieval fixed. A second axis compares the
+current BGE-M3 pair with Qwen3-Embedding-0.6B + Qwen3-Reranker-0.6B on the same
+pre-chunked corpus. Run and refresh it with:
+
+```bash
+python -m evaluation.run_baselines list
+python -m evaluation.run_baselines index --retrieval qwen3_0_6b
+python -m evaluation.run_baselines retrieval --retrieval qwen3_0_6b
+python -m evaluation.run_baselines report
+```
+
+Results are collected in the separate
+[`evaluation/model_baseline_comparison.md`](evaluation/model_baseline_comparison.md).
+All benchmark launchers hard-cap OMP, MKL, OpenBLAS, NumExpr, vecLib, and Rayon
+to six CPU threads.
+Unexecuted configurations stay marked as `planned`; the report never fills
+missing measurements with estimates.
 
 The older 20-query harness remains available as `python -m evaluation.evaluate`
 for routing and abstention regressions, but it is not the retrieval benchmark.
@@ -260,10 +281,10 @@ for routing and abstention regressions, but it is not the retrieval benchmark.
 
 | What | Result |
 |---|---|
-| Real corpus conversion | 3 Markdown files; 34 tables; 167 prose + 197 table-row chunks |
+| Real corpus conversion | 3 Markdown files; 34 tables; 167 prose + 196 table-row chunks |
 | Temporary Qdrant payload smoke test | text plus structured table metadata persisted |
 | Schema-2 retrieval benchmark | 100 questions; 50 single-gold + 50 multi-gold; 34 fact groups |
-| Offline unit + integration tests | 86 passed |
+| Offline unit + integration tests | 91 passed |
 
 The committed benchmark and reports are tied to the recorded corpus fingerprint
 and chunk IDs. Rebuild both after changing the parser, corpus, or chunk boundaries.

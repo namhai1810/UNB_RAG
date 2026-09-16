@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0",
+  "reference_run": "qwen3_30b_a3b_awq__bge_m3",
+  "llm_baselines": [
+    {
+      "id": "qwen2_5_7b_instruct",
+      "model": "Qwen/Qwen2.5-7B-Instruct",
+      "family": "Qwen2.5",
+      "parameters": "7.6B",
+      "chat_template_kwargs": {},
+      "role": "previous-generation, similarly sized control"
+    },
+    {
+      "id": "qwen3_8b",
+      "model": "Qwen/Qwen3-8B",
+      "family": "Qwen3",
+      "parameters": "8.2B",
+      "chat_template_kwargs": {"enable_thinking": false},
+      "role": "small dense baseline"
+    },
+    {
+      "id": "qwen3_14b",
+      "model": "Qwen/Qwen3-14B",
+      "family": "Qwen3",
+      "parameters": "14.8B",
+      "chat_template_kwargs": {"enable_thinking": false},
+      "role": "medium dense scaling point"
+    },
+    {
+      "id": "qwen3_30b_a3b_awq",
+      "model": "QuixiAI/Qwen3-30B-A3B-AWQ",
+      "family": "Qwen3 MoE",
+      "parameters": "30.5B total / 3.3B active, AWQ",
+      "chat_template_kwargs": {"enable_thinking": false},
+      "role": "current project baseline"
+    }
+  ],
+  "retrieval_baselines": [
+    {
+      "id": "bge_m3",
+      "embedding_model": "BAAI/bge-m3",
+      "embedding_query_prompt_name": null,
+      "reranker_model": "BAAI/bge-reranker-v2-m3",
+      "qdrant_path": "data/processed/qdrant",
+      "role": "current project baseline"
+    },
+    {
+      "id": "qwen3_0_6b",
+      "embedding_model": "Qwen/Qwen3-Embedding-0.6B",
+      "embedding_query_prompt_name": "query",
+      "reranker_model": "Qwen/Qwen3-Reranker-0.6B",
+      "qdrant_path": "data/processed/qdrant_qwen3_0_6b",
+      "role": "same-size Qwen retrieval pair"
+    }
+  ]
+}

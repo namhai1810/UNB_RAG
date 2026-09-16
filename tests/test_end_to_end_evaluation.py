@@ -2,7 +2,12 @@ from __future__ import annotations
 
 from types import SimpleNamespace
 
-from evaluation.evaluate_end_to_end import _percentile, score_citations, summarise
+from evaluation.evaluate_end_to_end import (
+    _percentile,
+    resume_config_matches,
+    score_citations,
+    summarise,
+)
 
 
 def _case():
@@ -58,3 +63,20 @@ def test_summary_splits_single_and_multi_gold():
     assert summary["by_retrieval_rounds"]["1"]["n"] == 2
     assert summary["latency"]["median_s"] == 3.0
     assert _percentile([1.0, 2.0, 3.0, 4.0], 0.95) == 4.0
+
+
+def test_resume_requires_the_exact_model_and_retrieval_config():
+    config = {
+        "dataset_schema_version": "2.0",
+        "corpus_sha256": "same",
+        "llm_provider": "openai",
+        "llm_model": "Qwen/Qwen3-8B",
+        "openai_chat_template_kwargs": {"enable_thinking": False},
+        "embedding_model": "BAAI/bge-m3",
+        "embedding_query_prompt_name": None,
+        "reranker_model": "BAAI/bge-reranker-v2-m3",
+        "max_retrieval_rounds": 3,
+    }
+    assert resume_config_matches(config, config)
+    assert not resume_config_matches({**config, "llm_model": "Qwen/Qwen2.5-7B-Instruct"}, config)
+    assert not resume_config_matches({**config, "openai_chat_template_kwargs": {}}, config)
